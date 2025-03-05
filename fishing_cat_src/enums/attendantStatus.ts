@@ -1,0 +1,5 @@
+export enum ATTENDANT_STATUS {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  ABSENT = 'ABSENT',
+}

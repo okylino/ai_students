@@ -1,0 +1,29 @@
+{
+  "title": "{{date}} 作业",
+  "loading": "加载中...",
+  "objective": "目标",
+  "viewResource": "查看资源",
+  "navigation": {
+    "myClass": "我的课程",
+    "assignment": "作业"
+  },
+  "extendedMaterials": {
+    "title": "扩展材料",
+    "description": "在做以下练习之前，请查看以下资源。这些资源将帮助你更好地理解概念。"
+  },
+  "moreExercises": {
+    "title": "更多练习",
+    "description": "通过更多练习来提高你的能力",
+    "practiceWithAI": "与 AI 一起练习",
+    "practiceNow": "立即练习",
+    "dueDate": "截止日期: {{date}}"
+  },
+  "noAssignment": {
+    "title": "暂无作业",
+    "description": "当前没有可用的作业"
+  },
+  "error": {
+    "fetchFailed": "获取作业数据失败",
+    "noAssignmentSelected": "未选择作业"
+  }
+} 
