@@ -25,7 +25,7 @@ export interface Assignment {
   objective_index: number;
   resource_id: string;
   has_feedback: boolean;
-  material_list: Material[];
+  materialList: Material[];
   quiz_list: null;
   _answerable: boolean;
 }
@@ -36,4 +36,4 @@ export interface AssignmentListResp {
 
 export interface AssignmentListReq {
   lesson_id: string;
-} 
+}
