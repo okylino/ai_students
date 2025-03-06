@@ -1,6 +1,8 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { AssignmentListReq, AssignmentListResp } from '../models/assignment/assignmentList';
-import { fetchBaseQuery } from '@reduxjs/toolkit/query';
+import { UpdateAssignmentStatusReq, UpdateAssignmentStatusResp } from '../models/assignment/updateAssignmentStatus';
+import baseQuery from '@/api/baseQuery';
+import defineEndpoints from '@/api/definedEndpoints';
 
 export const assignmentApi = createApi({
   /**
@@ -8,25 +10,15 @@ export const assignmentApi = createApi({
    * @param params - Request parameters containing lesson_id
    * @returns Promise with assignment list response
    */
-  reducerPath: 'assignmentApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
-  endpoints: (builder) => ({
+  reducerPath: `assignments`,
+  baseQuery,
+  endpoints: defineEndpoints(({ query, mutation }) => ({
     /** [GET] get room list with lesson */
-    getAssignmentList: builder.query<AssignmentListResp, AssignmentListReq>({
-      query: (params) => ({
-        url: '/assignments',
-        method: 'GET',
-        params,
-      }),
-    }),
-    updateAssignmentStatus: builder.mutation<void, { assignment_id: number; status: 'READ' | 'UNREAD' }>({
-      query: (body) => ({
-        url: '/assignments/status',
-        method: 'PUT',
-        body,
-      }),
-    }),
-  }),
+    getAssignmentList: query.get<AssignmentListResp, AssignmentListReq>('assignments/:lesson_id'),
+
+    /** [PUT] update assignment status */
+    updateAssignmentStatus: mutation.put<UpdateAssignmentStatusResp, UpdateAssignmentStatusReq>('assignments/:assignment_id/status'),
+  }))
 });
 
 export const { useGetAssignmentListQuery, useUpdateAssignmentStatusMutation } = assignmentApi;

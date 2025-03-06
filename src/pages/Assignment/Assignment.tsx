@@ -17,7 +17,7 @@ import {
   ContentWrapper,
   ContentSection,
 } from './Assignment.style';
-import { Footer } from '../../components/Footer/Footer';
+
 import { useGetAssignmentListQuery, useUpdateAssignmentStatusMutation } from '@/api/services/assignmentService';
 import emptyImage from '../../assets/images/empty.png';
 import i18next from 'i18next';
@@ -25,13 +25,15 @@ import documentIcon from '../../assets/assignment/Icon-book.png';
 import globeIcon from '../../assets/assignment/Icon-globe.png';
 import exerciseIcon from '../../assets/assignment/Icon-assignment.png';
 import chatIcon from '../../assets/assignment/Icon-single-chat-bubble.png';
+import LegalAndVersionInfo from '@fishing_cat/layouts/legalAndVersionInfo/LegalAndVersionInfo';
 
 export const Assignment: FC = () => {
   const { t, i18n } = useTranslation('assignment');
   const [activeTab, setActiveTab] = useState(0);
+  const [quizAnswers, setQuizAnswers] = useState<Record<string, number[]>>({});
   const [updateAssignmentStatus] = useUpdateAssignmentStatusMutation();
 
-  const lessonId = '1';
+  const lessonId = '3';
   const { data: assignmentData, isLoading, error } = useGetAssignmentListQuery({ lesson_id: lessonId });
 
   const assignments = assignmentData?.assignments || [];
@@ -101,6 +103,26 @@ export const Assignment: FC = () => {
       });
     }
   }, [currentAssignment, updateAssignmentStatus]);
+
+  // 添加选择答案的处理函数
+  const handleOptionClick = (quizId: string, optionId: number, quizType: string) => {
+    setQuizAnswers(prev => {
+      const newAnswers = { ...prev };
+      const currentAnswers = prev[quizId] || [];
+
+      if (quizType === 'SINGLE_SELECT') {
+        // 单选题：如果已选中则取消，否则选择新选项
+        newAnswers[quizId] = currentAnswers.includes(optionId) ? [] : [optionId];
+      } else {
+        // 多选题：切换选中状态
+        newAnswers[quizId] = currentAnswers.includes(optionId)
+          ? currentAnswers.filter(id => id !== optionId)
+          : [...currentAnswers, optionId];
+      }
+
+      return newAnswers;
+    });
+  };
 
   return (
     <>
@@ -192,17 +214,53 @@ export const Assignment: FC = () => {
                   <p className='description'>{t('moreExercises.description')}</p>
 
                   <PracticeSection>
-                    <div className='practice-content'>
-                      <img src='/src/assets/assignment/practice.png' alt='Practice with AI' />
-                      <div className='practice-text'>
-                        <p>{t('moreExercises.practiceWithAI')}</p>
-                        <p className='due-date'>{t('moreExercises.dueDate', { date: '2025-02-17' })}</p>
-                      </div>
-                    </div>
-                    <PracticeButton>
-                      <img src={chatIcon} alt='Chat' />
-                      {t('moreExercises.practiceNow')}
-                    </PracticeButton>
+                    {currentAssignment.status === 'DONE' && currentAssignment.quizList ? (
+                      <>
+                        {currentAssignment.quizList.map((quiz, index) => {
+                          const quizId = quiz.quizId;
+                          const currentAnswers = quizAnswers[quizId] || [];
+                          return (
+                            <div key={`quiz-${quizId}`} className='quiz-card'>
+                              <div className='quiz-header'>
+                                <span className='quiz-number'>{index + 1}.</span>
+                                <div className='quiz-question'>
+                                  {quiz.content}
+                                </div>
+                              </div>
+                              <div className='quiz-options'>
+                                {quiz.optionList.map((option) => {
+                                  const optionLabel = String.fromCharCode(65 + option.optionId - 1);
+                                  return (
+                                    <div
+                                      key={`option-${quizId}-${option.optionId}`}
+                                      className={`option ${currentAnswers.includes(option.optionId) ? 'selected' : ''}`}
+                                      onClick={() => handleOptionClick(quizId, option.optionId, quiz.quizType)}
+                                    >
+                                      <span className='option-label'>{optionLabel}.</span>
+                                      <span className='option-content'>{option.content}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </>
+                    ) : (
+                      <>
+                        <div className='practice-content'>
+                          <img src='/src/assets/assignment/practice.png' alt='Practice with AI' />
+                          <div className='practice-text'>
+                            <p>{t('moreExercises.practiceWithAI')}</p>
+                            <p className='due-date'>{t('moreExercises.dueDate', { date: '2025-02-17' })}</p>
+                          </div>
+                        </div>
+                        <PracticeButton>
+                          <img src={chatIcon} alt='Chat' />
+                          {t('moreExercises.practiceNow')}
+                        </PracticeButton>
+                      </>
+                    )}
                   </PracticeSection>
                 </ContentSection>
               ) : (
@@ -213,9 +271,9 @@ export const Assignment: FC = () => {
             </>
           )}
         </ContentWrapper>
+        <LegalAndVersionInfo />
       </AssignmentWrapper>
 
-      <Footer />
     </>
   );
 };

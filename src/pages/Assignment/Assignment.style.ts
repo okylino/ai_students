@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 
 export const AssignmentWrapper = styled.div`
-  padding: 24px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #F5F5F5;
 `;
 
 export const Navigation = styled.div`
@@ -9,9 +12,11 @@ export const Navigation = styled.div`
   align-items: center;
   gap: 8px;
   margin-bottom: 24px;
+  padding: 24px 0;
+  padding-left: 24px;
 
   a {
-    color: #666;
+    color: #668;
     text-decoration: none;
 
     &:hover {
@@ -119,6 +124,14 @@ export const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: calc(100vh - 180px);
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const ContentSection = styled.div`
@@ -134,6 +147,7 @@ export const ContentSection = styled.div`
     align-items: center;
     gap: 16px;
     margin-bottom: 16px;
+    margin-top: 50px;
     padding-left: 16px;
 
     img {
@@ -272,6 +286,90 @@ export const PracticeSection = styled.div`
         color: #444444;
         margin-top: 8px;
       }
+    }
+  }
+
+  .quiz-card {
+    width: 700px;
+    height: 206px;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 6px 0px #00000029;
+    margin-bottom: 16px;
+    background: #FFFFFF;
+    text-align: left;
+  }
+
+  .quiz-header {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+
+  .quiz-number {
+    font-size: 16px;
+    line-height: 19px;
+    color: #333;
+    font-weight: 500;
+    min-width: 24px;
+  }
+
+  .quiz-question {
+    font-size: 16px;
+    line-height: 19px;
+    color: #333;
+    flex: 1;
+  }
+
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 24px;
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      height: 26px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+
+      &:hover {
+        background-color: rgba(43, 48, 132, 0.05);
+      }
+
+      &.selected {
+        color: #2B3084;
+        background-color: rgba(43, 48, 132, 0.1);
+      }
+
+      .option-label {
+        font-weight: 500;
+        min-width: 24px;
+        color: #333;
+      }
+
+      .option-content {
+        flex: 1;
+        color: #333;
+      }
+    }
+  }
+
+  .quiz-result {
+    margin-top: 16px;
+    font-size: 14px;
+
+    &.correct {
+      color: #52C41A;
+    }
+
+    &.incorrect {
+      color: #FF4D4F;
     }
   }
 `;

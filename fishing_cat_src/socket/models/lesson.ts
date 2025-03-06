@@ -9,6 +9,7 @@ export interface JoinLessonReq {
 
 export interface ChooseSeatMessage {
   student_id: string;
+
   display_name: string;
   serial_number: number;
   seat_number: string;

@@ -12,6 +12,7 @@ const useNoSleep = (enabled = true) => {
       await noSleep.enable();
     };
 
+
     window.addEventListener('click', enableNoSleep);
 
     return () => {

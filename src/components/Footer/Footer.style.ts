@@ -1,14 +1,16 @@
 import styled from 'styled-components';
 
 export const FooterWrapper = styled.footer`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 24px;
   gap: 8px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
 `;
 
 export const Version = styled.span`

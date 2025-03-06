@@ -26,7 +26,7 @@ const baseQuery: BaseQueryFn<string | FetchArgs, BaseQueryApi, FetchBaseQueryErr
   if (typeof newArgs === 'object' && newArgs.body) newArgs.body = snakeCaseKeys(newArgs.body, { deep: true });
 
   const result: any = await fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_RESTFUL_API_DOMAIN}/api/v3`,
+    baseUrl: `${import.meta.env.VITE_RESTFUL_API_DOMAIN}/v3/v3`,
     prepareHeaders,
     paramsSerializer: (params: Record<string, any>) => {
       const newParams = snakeCaseKeys(params, { deep: true });

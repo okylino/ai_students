@@ -44,7 +44,7 @@ export const quizApi = createApi({
     }),
     /** [POST] update quiz note */
     updateQuizNote: mutation.post<BaseUpdateNoteResp['data'], UpdateQuizNoteReq>('/quizzes/:quizId/note', {
-      transformResponse: (response: BaseUpdateNoteResp) => response.data,
+      transformRespnse: (response: BaseUpdateNoteResp) => response.data,
       async onQueryStarted({ quizId }, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
