@@ -1,0 +1,5 @@
+export enum STUDENT_STATUS {
+  ABSENT = 'ABSENT',
+  INACTIVE = 'INACTIVE',
+  ACTIVE = 'ACTIVE',
+}

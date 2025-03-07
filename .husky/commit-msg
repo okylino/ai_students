@@ -1,0 +1,13 @@
+#!/usr/bin/sh
+check=$(head -1 $1 | grep -E '^(\[\w{9}\])+ (feat|chore|fix|ci|refactor|test|style|build|docs)(\(\w*\))?!?: .|^Merge (\(\w*\))?|^Sprint.(\(\w*\))?|^Revert (\(\w*\))?') || true
+if [ "" = "$check" ]; then
+    echo "Commit message should have ClickUp ticket id and types(feat|chore|fix|ci|refactor|test|style|build|docs)." 1>&2
+    echo "Please follow https://www.conventionalcommits.org/en/v1.0.0/" 1>&2
+    echo "Required format:" 1>&2
+    echo "    [ticketid] feat: commit message" 1>&2
+    echo "    [ticketid] feat!: breaking chage" 1>&2
+    echo "    [ticketid] docs(api): commit message" 1>&2
+    echo "    [ticketid][ticketid] feat: multiple ticket id" 1>&2
+    exit 1
+fi
+exit 0

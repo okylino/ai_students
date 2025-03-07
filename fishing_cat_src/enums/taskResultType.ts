@@ -1,0 +1,3 @@
+export enum TASK_RESULT_TYPE {
+  RESPONSE = 'RESPONSE',
+}

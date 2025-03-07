@@ -1,0 +1,43 @@
+.point_list {
+  position: fixed;
+  z-index: 102;
+  top: 72px;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin-right: -50%;
+  transform: translate(-50%, 0);
+}
+
+.point_toast {
+  margin-top: 8px;
+  padding: 8px 20px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 16px;
+  width: 327px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.point_toast.add {
+  border: 1px solid #f89e00;
+  background-color: #fff2dc;
+}
+
+.point_toast.subtract {
+  border: 1px solid #dd242b;
+  background-color: #ffdcdc;
+  color: #dd242b;
+}
+
+.point_toast div {
+  display: flex;
+  align-items: center;
+}
+
+.point_toast img {
+  margin-inline-start: 4px;
+  cursor: pointer;
+}

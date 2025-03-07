@@ -1,0 +1,29 @@
+{
+  "title": "Assignment {{date}}",
+  "loading": "Loading...",
+  "objective": "Objective",
+  "viewResource": "View Resource",
+  "navigation": {
+    "myClass": "My Class",
+    "assignment": "Assignment"
+  },
+  "extendedMaterials": {
+    "title": "Extended Materials",
+    "description": "Take a look at the websites below before you jump into your assignment. This might help you grasp the concept and learn better."
+  },
+  "moreExercises": {
+    "title": "More Exercises",
+    "description": "Improve your skills with more practice",
+    "practiceWithAI": "Practice with AI",
+    "practiceNow": "Practice Now",
+    "dueDate": "Due Date: {{date}}"
+  },
+  "noAssignment": {
+    "title": "No Assignment",
+    "description": "No assignment available"
+  },
+  "error": {
+    "fetchFailed": "Failed to fetch assignment data",
+    "noAssignmentSelected": "No assignment selected"
+  }
+}

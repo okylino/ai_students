@@ -1,0 +1,10 @@
+{
+  "allClasses": "全部课程",
+  "exploringGraphs": "探索图形与方程",
+  "motionAndAction": "运动与作用",
+  "assignment": "作业",
+  "review": "复习",
+  "join": "加入",
+  "classIdLabel": "课程ID：",
+  "seeAllLessons": "查看全部 {{count}} 节课"
+} 

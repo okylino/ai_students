@@ -1,0 +1,153 @@
+image: docker:20
+
+services:
+  - name: docker:20-dind
+    alias: docker
+
+stages:
+  - build
+  - deploy
+
+build_dev:
+  stage: build
+  environment:
+    name: dev
+  tags:
+    - linux
+  only:
+    - alpha
+  variables:
+    DOCKER_DEFAULT_PLATFORM: 'linux/amd64'
+    AWS_DEFAULT_REGION: 'ap-southeast-1'
+    ECR_URL: '699324607567.dkr.ecr.ap-southeast-1.amazonaws.com'
+  before_script:
+    - apk add --no-cache py3-pip make git npm nodejs
+    - pip install awscli
+    - aws configure set region $AWS_DEFAULT_REGION
+    - echo $AWS_DEFAULT_REGION
+    - echo $ECR_URL
+    - echo $AWS_ACCESS_KEY_ID
+    - echo $AWS_SECRET_ACCESS_KEY
+  script:
+    - make build
+
+deploy_dev:
+  stage: deploy
+  environment:
+    name: dev
+  tags:
+    - linux
+  only:
+    - alpha
+  variables:
+    DOCKER_DEFAULT_PLATFORM: 'linux/amd64'
+    AWS_DEFAULT_REGION: 'ap-southeast-1'
+    CDK_DEFAULT_ACCOUNT: '699324607567'
+  before_script:
+    - apk add --no-cache python3 py3-pip make git nodejs npm curl
+    - curl -sSL https://install.python-poetry.org | python3 -
+    - export PATH="/root/.local/bin:$PATH"
+    - poetry config virtualenvs.create false
+    - poetry install
+    - npm install -g aws-cdk
+    - COMMIT_HASH=$(git rev-parse --short HEAD)
+    - export DOCKER_IMAGE_VERSION=$COMMIT_HASH
+    - export CDK_DEFAULT_REGION=$AWS_DEFAULT_REGION
+  script:
+    - make deploy
+
+build_staging:
+  stage: build
+  environment:
+    name: staging
+  tags:
+    - linux
+  only:
+    - /^stage\//
+  variables:
+    DOCKER_DEFAULT_PLATFORM: 'linux/amd64'
+    AWS_DEFAULT_REGION: 'eu-central-1'
+    ECR_URL: '212690244067.dkr.ecr.eu-central-1.amazonaws.com'
+  before_script:
+    - apk add --no-cache py3-pip make git npm nodejs
+    - pip install awscli
+    - aws configure set region $AWS_DEFAULT_REGION
+    - echo $AWS_DEFAULT_REGION
+    - echo $ECR_URL
+    - echo $AWS_ACCESS_KEY_ID
+    - echo $AWS_SECRET_ACCESS_KEY
+  script:
+    - make build
+
+deploy_staging:
+  stage: deploy
+  environment:
+    name: staging
+  tags:
+    - linux
+  only:
+    - /^stage\//
+  variables:
+    DOCKER_DEFAULT_PLATFORM: 'linux/amd64'
+    AWS_DEFAULT_REGION: 'eu-central-1'
+    CDK_DEFAULT_ACCOUNT: '212690244067'
+  before_script:
+    - apk add --no-cache python3 py3-pip make git nodejs npm curl
+    - curl -sSL https://install.python-poetry.org | python3 -
+    - export PATH="/root/.local/bin:$PATH"
+    - poetry config virtualenvs.create false
+    - poetry install
+    - npm install -g aws-cdk
+    - COMMIT_HASH=$(git rev-parse --short HEAD)
+    - export DOCKER_IMAGE_VERSION=$COMMIT_HASH
+    - export CDK_DEFAULT_REGION=$AWS_DEFAULT_REGION
+  script:
+    - make deploy
+
+build_production:
+  stage: build
+  environment:
+    name: production
+  tags:
+    - linux
+  only:
+    - /^release\//
+  variables:
+    DOCKER_DEFAULT_PLATFORM: 'linux/amd64'
+    AWS_DEFAULT_REGION: 'eu-west-3'
+    ECR_URL: '909632374904.dkr.ecr.eu-west-3.amazonaws.com'
+  before_script:
+    - apk add --no-cache py3-pip make git npm nodejs
+    - pip install awscli
+    - aws configure set region $AWS_DEFAULT_REGION
+    - echo $AWS_DEFAULT_REGION
+    - echo $ECR_URL
+    - echo $AWS_ACCESS_KEY_ID
+    - echo $AWS_SECRET_ACCESS_KEY
+  script:
+    - make build
+
+deploy_production:
+  stage: deploy
+  environment:
+    name: production
+  tags:
+    - linux
+  only:
+    - /^release\//
+  variables:
+    DOCKER_DEFAULT_PLATFORM: 'linux/amd64'
+    AWS_DEFAULT_REGION: 'eu-west-3'
+    CDK_DEFAULT_ACCOUNT: '909632374904'
+  before_script:
+    - apk add --no-cache python3 py3-pip make git nodejs npm curl
+    - curl -sSL https://install.python-poetry.org | python3 -
+    - export PATH="/root/.local/bin:$PATH"
+    - poetry config virtualenvs.create false
+    - poetry install
+    - npm install -g aws-cdk
+    - COMMIT_HASH=$(git rev-parse --short HEAD)
+    - export DOCKER_IMAGE_VERSION=$COMMIT_HASH
+    - export CDK_DEFAULT_REGION=$AWS_DEFAULT_REGION
+  script:
+    - make deploy
