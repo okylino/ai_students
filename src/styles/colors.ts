@@ -73,10 +73,11 @@ export const INVALID = Object.freeze({
 export const GRAY = Object.freeze({
   DISABLED: '#C3C7C7',
 });
- 
+
 export const PRIMARY = Object.freeze({
   DEFAULT: '#2B3084',
 });
+
 export default {
   NEUTRAL,
   VIOLET,
@@ -84,6 +85,6 @@ export default {
   YELLOW,
   VALID,
   INVALID,
-  GRAY, 
+  GRAY,
   PRIMARY,
 };
