@@ -1,18 +1,11 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ClassCard from '../../components/ClassCard';
-import {
-  PageTitle,
-  ClassesContainer,
-  ClassList,
-  ContentWrapper
-} from './Classes.style';
+import { PageTitle, ClassesContainer, ClassList, ContentWrapper } from './Classes.style';
 
 const Classes: React.FC = () => {
   const { t } = useTranslation();
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(() =>
-    new Set(['68710912', '68710915'])
-  );
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set(['68710912', '68710915']));
 
   const mockClasses = [
     {
@@ -23,39 +16,60 @@ const Classes: React.FC = () => {
         {
           startTime: 'Jan 05, 2024 11:05-now',
           stars: 2,
-          hasAssignment: true
+          hasAssignment: true,
+          canJoin: true,
+          hasReview: false,
+          status: 'in_progress',
         },
         {
           startTime: 'Jan 05, 2024 11:03-11:58',
           stars: 5,
-          hasAssignment: true
+          hasAssignment: true,
+          canJoin: false,
+          hasReview: true,
+          status: 'completed',
         },
         {
           startTime: 'Jan 12, 2024 11:03-11:58',
           stars: 6,
-          hasAssignment: true
+          hasAssignment: true,
+          canJoin: false,
+          hasReview: true,
+          status: 'completed',
         },
         {
           startTime: 'Jan 12, 2024 11:03-11:58',
           stars: 6,
-          hasAssignment: true
+          hasAssignment: true,
+          canJoin: false,
+          hasReview: true,
+          status: 'completed',
         },
         {
           startTime: 'Jan 05, 2024 11:03-11:58',
           stars: 5,
-          hasAssignment: true
+          hasAssignment: true,
+          canJoin: false,
+          hasReview: true,
+          status: 'completed',
         },
         {
           startTime: 'Jan 12, 2024 11:03-11:58',
           stars: 6,
-          hasAssignment: true
+          hasAssignment: true,
+          canJoin: false,
+          hasReview: true,
+          status: 'completed',
         },
         {
           startTime: 'Jan 12, 2024 11:03-11:58',
           stars: 6,
-          hasAssignment: true
-        }
-      ]
+          hasAssignment: true,
+          canJoin: false,
+          hasReview: true,
+          status: 'completed',
+        },
+      ],
     },
     {
       id: '68710915',
@@ -65,13 +79,17 @@ const Classes: React.FC = () => {
         {
           startTime: 'Jan 05, 2024 11:00-now',
           stars: 0,
-        }
-      ]
-    }
+          hasAssignment: false,
+          canJoin: true,
+          hasReview: false,
+          status: 'upcoming',
+        },
+      ],
+    },
   ];
 
   const handleExpand = (id: string) => {
-    setExpandedIds(prev => {
+    setExpandedIds((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
@@ -84,9 +102,7 @@ const Classes: React.FC = () => {
 
   return (
     <ContentWrapper>
-      <PageTitle>
-        {t('allClasses')}
-      </PageTitle>
+      <PageTitle>{t('allClasses')}</PageTitle>
       <ClassesContainer>
         <ClassList>
           {mockClasses.map((classItem) => (
