@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ClassCard from '../../components/ClassCard';
 import { PageTitle, ClassesContainer, ClassList, ContentWrapper } from './Classes.style';
+import { LessonStatus } from '../../components/ClassCard/ClassCard.enum';
 
 const Classes: React.FC = () => {
   const { t } = useTranslation();
@@ -19,7 +20,7 @@ const Classes: React.FC = () => {
           hasAssignment: true,
           canJoin: true,
           hasReview: false,
-          status: 'in_progress',
+          status: LessonStatus.IN_PROGRESS,
         },
         {
           startTime: 'Jan 05, 2024 11:03-11:58',
@@ -27,7 +28,7 @@ const Classes: React.FC = () => {
           hasAssignment: true,
           canJoin: false,
           hasReview: true,
-          status: 'completed',
+          status: LessonStatus.COMPLETED,
         },
         {
           startTime: 'Jan 12, 2024 11:03-11:58',
@@ -35,7 +36,7 @@ const Classes: React.FC = () => {
           hasAssignment: true,
           canJoin: false,
           hasReview: true,
-          status: 'completed',
+          status: LessonStatus.COMPLETED,
         },
         {
           startTime: 'Jan 12, 2024 11:03-11:58',
@@ -43,7 +44,7 @@ const Classes: React.FC = () => {
           hasAssignment: true,
           canJoin: false,
           hasReview: true,
-          status: 'completed',
+          status: LessonStatus.COMPLETED,
         },
         {
           startTime: 'Jan 05, 2024 11:03-11:58',
@@ -51,7 +52,7 @@ const Classes: React.FC = () => {
           hasAssignment: true,
           canJoin: false,
           hasReview: true,
-          status: 'completed',
+          status: LessonStatus.COMPLETED,
         },
         {
           startTime: 'Jan 12, 2024 11:03-11:58',
@@ -59,7 +60,7 @@ const Classes: React.FC = () => {
           hasAssignment: true,
           canJoin: false,
           hasReview: true,
-          status: 'completed',
+          status: LessonStatus.COMPLETED,
         },
         {
           startTime: 'Jan 12, 2024 11:03-11:58',
@@ -67,7 +68,7 @@ const Classes: React.FC = () => {
           hasAssignment: true,
           canJoin: false,
           hasReview: true,
-          status: 'completed',
+          status: LessonStatus.COMPLETED,
         },
       ],
     },
@@ -110,7 +111,7 @@ const Classes: React.FC = () => {
               key={classItem.id}
               {...classItem}
               title={t(classItem.titleKey)}
-              isExpanded={expandedIds.has(classItem.id)}
+              isexpanded={expandedIds.has(classItem.id)}
               onExpand={() => handleExpand(classItem.id)}
               onAssignmentClick={() => console.log('Assignment clicked')}
               onReviewClick={() => console.log('Review clicked')}

@@ -6,7 +6,6 @@ import globalReducer from '@fishing_cat/redux/slices/globalSlice';
 import translationReducer from '@fishing_cat/redux/slices/translationSlice';
 import { authApi } from '@/api/services/authService';
 import { lessonApi } from '@/api/services/lessonService';
-import { quizApi } from '@/api/services/quizService';
 import { roomApi } from '@/api/services/roomService';
 import { taskApi } from '@/api/services/taskService';
 import { toolApi } from '@/api/services/toolService';
@@ -19,7 +18,6 @@ const apiSlices = [
   authApi,
   roomApi,
   lessonApi,
-  quizApi,
   taskApi,
   toolApi,
   translationApi,

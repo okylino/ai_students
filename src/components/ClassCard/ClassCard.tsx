@@ -18,47 +18,13 @@ import {
   ExpandButton,
   SeeAllText,
 } from './ClassCard.style';
-import { ClassCardProps } from './ClassCard.type';
+import { ClassCardProps, LessonWithStatus, LessonActionsProps } from './ClassCard.type';
 import KeyboardArrowUpIcon from '../../assets/classes/KeyboardArrowUp.png';
 import { Badge } from '@mui/material';
+import { LessonStatus } from './ClassCard.enum';
+import { useNavigate } from 'react-router-dom';
 
 const MAX_VISIBLE_LESSONS = 3;
-
-// 添加课程状态枚举
-enum LessonStatus {
-  UPCOMING = 'upcoming', // 即将开始的课程
-  IN_PROGRESS = 'inProgress', // 进行中的课程
-  COMPLETED = 'completed', // 已完成的课程
-}
-
-interface LessonWithStatus {
-  startTime: string;
-  stars: number;
-  hasAssignment: boolean;
-  canJoin: boolean;
-  hasReview: boolean;
-  unreadAssignments?: number;
-  status: LessonStatus;
-}
-
-interface LessonActionsProps {
-  lesson: LessonWithStatus;
-  onAssignmentClick: () => void;
-  onReviewClick: () => void;
-  onJoinClick: () => void;
-}
-
-// 修改 ClassCardProps 类型
-interface ClassCardProps {
-  title: string;
-  classId: string;
-  lessons: LessonWithStatus[]; // 确保使用 LessonWithStatus 类型
-  isExpanded: boolean;
-  onExpand: () => void;
-  onAssignmentClick: () => void;
-  onReviewClick: () => void;
-  onJoinClick: () => void;
-}
 
 // 修改示例数据以确保所有必要的字段都有值
 const mockLessons: LessonWithStatus[] = [
@@ -91,6 +57,7 @@ const mockLessons: LessonWithStatus[] = [
   },
 ];
 
+// 将 LessonActions 组件声明为一个常量，确保只声明一次
 const LessonActions: React.FC<LessonActionsProps> = ({ lesson, onAssignmentClick, onReviewClick, onJoinClick }) => {
   const { t } = useTranslation('classes');
 
@@ -144,32 +111,42 @@ const LessonActions: React.FC<LessonActionsProps> = ({ lesson, onAssignmentClick
 const ClassCard: React.FC<ClassCardProps> = ({
   title,
   classId,
-  lessons = mockLessons, // 使用示例数据作为默认值
-  isExpanded,
+  lessons = mockLessons,
+  isexpanded,
   onExpand,
   onAssignmentClick,
   onReviewClick,
   onJoinClick,
+  hideExpandButton = false,
+  showAllLessons = false,
+  hideSeeAllText = false,
 }) => {
   const { t } = useTranslation('classes');
+  const navigate = useNavigate();
   const hasMoreLessons = lessons.length > MAX_VISIBLE_LESSONS;
-  const visibleLessons = lessons.slice(0, MAX_VISIBLE_LESSONS);
+  const visibleLessons = showAllLessons ? lessons : lessons.slice(0, MAX_VISIBLE_LESSONS);
+
+  const handleSeeAllClick = () => {
+    navigate(`/classDetail`);
+  };
 
   return (
     <Card>
       <CardHeader>
         <HeaderTop>
           <Title>{title}</Title>
-          <ExpandButton onClick={onExpand} isExpanded={isExpanded}>
-            <img src={KeyboardArrowUpIcon} alt='expand' />
-          </ExpandButton>
+          {!hideExpandButton && (
+            <ExpandButton onClick={onExpand} isexpanded={isexpanded}>
+              <img src={KeyboardArrowUpIcon} alt='expand' />
+            </ExpandButton>
+          )}
         </HeaderTop>
         <ClassId>
           {t('classIdLabel')}
           {classId}
         </ClassId>
       </CardHeader>
-      <CardContent isExpanded={isExpanded}>
+      <CardContent isexpanded={isexpanded}>
         <LessonList>
           {visibleLessons.map((lesson, index) => (
             <LessonItem key={index}>
@@ -186,7 +163,11 @@ const ClassCard: React.FC<ClassCardProps> = ({
               />
             </LessonItem>
           ))}
-          {hasMoreLessons && <SeeAllText>{t('seeAllLessons', { count: lessons.length })}</SeeAllText>}
+          {!hideSeeAllText && hasMoreLessons && !showAllLessons && (
+            <SeeAllText onClick={handleSeeAllClick}>
+              {t('seeAllLessons', { count: lessons.length })}
+            </SeeAllText>
+          )}
         </LessonList>
       </CardContent>
     </Card>

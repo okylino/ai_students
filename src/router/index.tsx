@@ -4,6 +4,8 @@ import App from '@/App';
 import MyClass from '@/pages/MyClass';
 import { Assignment } from '@/pages/Assignment';
 import Classes from '@/pages/Classes';
+import ClassDetail from '@/pages/ClassDetail';
+import { PracticeZone } from '@/pages/PracticeZone/PracticeZone';
 
 export const routes: RouteObject[] = [
   {
@@ -24,6 +26,13 @@ export const routes: RouteObject[] = [
       }, {
         path: '/classes',
         element: <Classes />,
+      }, {
+        path: '/classDetail',
+        element: <ClassDetail />,
+      },
+      {
+        path: '/assignment/:assignmentId/practice',
+        element: <PracticeZone />
       },
       { path: '*', element: <Navigate to='/' /> },
     ],

@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   AssignmentWrapper,
@@ -29,6 +29,7 @@ import LegalAndVersionInfo from '@fishing_cat/layouts/legalAndVersionInfo/LegalA
 
 export const Assignment: FC = () => {
   const { t, i18n } = useTranslation('assignment');
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number[]>>({});
   const [updateAssignmentStatus] = useUpdateAssignmentStatusMutation();
@@ -122,6 +123,13 @@ export const Assignment: FC = () => {
 
       return newAnswers;
     });
+  };
+
+  // 添加处理点击事件的函数
+  const handlePracticeClick = () => {
+    if (currentAssignment) {
+      navigate(`/assignment/${currentAssignment.id}/practice`);
+    }
   };
 
   return (
@@ -255,7 +263,7 @@ export const Assignment: FC = () => {
                             <p className='due-date'>{t('moreExercises.dueDate', { date: '2025-02-17' })}</p>
                           </div>
                         </div>
-                        <PracticeButton>
+                        <PracticeButton onClick={handlePracticeClick}>
                           <img src={chatIcon} alt='Chat' />
                           {t('moreExercises.practiceNow')}
                         </PracticeButton>

@@ -1,0 +1,5 @@
+{
+  "progress": "Quiz {{current}} of {{total}}",
+  "submit": "Submit Answer",
+  "next": "Next Question"
+} 

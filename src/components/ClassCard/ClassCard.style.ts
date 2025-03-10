@@ -42,8 +42,8 @@ export const ClassId = styled.div`
   line-height: 160%;
 `;
 
-export const CardContent = styled.div<{ isExpanded: boolean }>`
-  display: ${props => props.isExpanded ? 'block' : 'none'};
+export const CardContent = styled.div<{ isexpanded: boolean }>`
+  display: ${props => props.isexpanded ? 'block' : 'none'};
 `;
 
 export const LessonList = styled.div`
@@ -117,7 +117,7 @@ export const ActionButton = styled(Button)`
   }
 `;
 
-export const ExpandButton = styled.button<{ isExpanded: boolean }>`
+export const ExpandButton = styled.button<{ isexpanded: boolean }>`
   width: 40px;
   height: 40px;
   background: transparent;
@@ -132,17 +132,17 @@ export const ExpandButton = styled.button<{ isExpanded: boolean }>`
     width: 24px;
     height: 24px;
     transition: transform 0.2s;
-    transform: ${props => props.isExpanded ? 'rotate(180deg)' : 'rotate(0)'};
+    transform: ${props => props.isexpanded ? 'rotate(180deg)' : 'rotate(0)'};
   }
 `;
 
 export const SeeAllText = styled.div`
-  color: #666666;
-  font-size: 14px;
-  line-height: 160%;
   text-align: center;
-  padding: 16px 0;
-  cursor: pointer;
-  border-top: 1px solid #E5E5E5;
+  color: ${({ theme }) => theme.palette.primary.main};
   margin-top: 16px;
+  cursor: pointer;
+  
+  &:hover {
+    text-decoration: underline;
+  }
 `; 

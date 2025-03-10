@@ -10,8 +10,7 @@ export interface AssignmentListResp {
       img_url: string;
     }[];
     quizList:  Quiz[]
-    
-    // ... other fields
+
   }[];
 }
 export interface Material {
@@ -66,13 +65,11 @@ export interface Assignment {
   _answerable: boolean;
 }
 
-export interface AssignmentListResp {
-  assignments: Assignment[];
-}
 
 export interface AssignmentListReq {
   lesson_id: string;
 }
+
 
 export class AssignmentListReq {
 }
