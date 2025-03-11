@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const PracticeZoneWrapper = styled.div`
   padding: 24px;
   min-height: 100vh;
-  background: #F8F9FD;
+  background: transparent;
 `;
 
 export const TopBar = styled.div`
@@ -83,7 +83,7 @@ export const ContentWrapper = styled.div`
 `;
 
 export const QuizSection = styled.div`
-  background: white;
+  background: transparent;
   border-radius: 8px;
   padding: 24px;
   width: 828px;
@@ -91,7 +91,7 @@ export const QuizSection = styled.div`
 `;
 
 export const ChatSection = styled.div`
-  background: white;
+  background: transparent;
   border-radius: 8px;
   padding: 24px;
   width: 828px;

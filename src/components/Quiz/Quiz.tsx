@@ -5,29 +5,56 @@ import {
   QuizProgress,
   QuizQuestion,
   OptionsGrid,
-  OptionButton
+  OptionButton,
+  QuizContainer,
 } from './Quiz.styles';
-import { QuizProps } from './Quiz.type';
+import { QuizProps } from '../../api/models/quiz/quiz.type';
 
 export const Quiz: FC<QuizProps> = ({
   quiz,
   totalQuizzes,
   currentQuiz,
   studentAnswer,
-  onAnswerSelect
+  onAnswerSelect,
+  onPrevious,
+  onNext
 }) => {
+  console.log('Quiz component rendering...');
+
   const { t } = useTranslation('quiz');
+
+  if (!quiz || !quiz.content) {
+    return <div>Loading...</div>;
+  }
+
+  console.log('Quiz props:', {
+    quiz,
+    totalQuizzes,
+    currentQuiz,
+    studentAnswer,
+    onAnswerSelect,
+    onPrevious,
+    onNext
+  });
+
+  console.log('quiz:', quiz);
+  console.log('totalQuizzes:', totalQuizzes);
+  console.log('currentQuiz:', currentQuiz);
+  console.log('studentAnswer:', studentAnswer);
 
   const optionLabels = ['A', 'B', 'C', 'D'];
 
   return (
-    <QuizWrapper>
-      <QuizProgress>
-        {t('quiz')} {currentQuiz} {t('of')} {totalQuizzes}
-      </QuizProgress>
+    <QuizContainer>
+      <QuizWrapper>
+        <QuizProgress>
+          {t('quiz')} {currentQuiz} {t('of')} {totalQuizzes}
+        </QuizProgress>
 
-      <QuizQuestion>{quiz.content}</QuizQuestion>
+        <QuizQuestion>{quiz.content}</QuizQuestion>
 
+
+      </QuizWrapper>
       <OptionsGrid>
         {quiz.optionList.map((option, index) => (
           <OptionButton
@@ -40,6 +67,7 @@ export const Quiz: FC<QuizProps> = ({
           </OptionButton>
         ))}
       </OptionsGrid>
-    </QuizWrapper>
+    </QuizContainer>
+
   );
 };

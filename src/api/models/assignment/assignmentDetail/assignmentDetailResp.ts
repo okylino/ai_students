@@ -1,6 +1,10 @@
+import { QuizData, Option as QuizOption } from '../../quiz/quiz.type';
+
 export interface AssignmentDetailResp {
-  quiz: any; // TODO: 使用具体的Quiz类型
+  lessonInsightId: string;
+  nextQuizId: string | null;
+  previousQuizId: string | null;
+  quiz: QuizData;
+  studentAnswer: number[];
   totalQuizzes: number;
-  currentQuiz: number;
-  studentAnswer: any; // TODO: 使用具体的答案类型
 }

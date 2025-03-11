@@ -31,7 +31,8 @@ export const assignmentApi = createApi({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
-        })
+        }),
+        transformResponse: (response: { data: AssignmentDetailResp }) => response.data
       }
     ),
   })),

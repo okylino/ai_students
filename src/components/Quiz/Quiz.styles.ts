@@ -1,59 +1,77 @@
 import styled from 'styled-components';
 
 export const QuizWrapper = styled.div`
+  background: #FFFFFF;
+  border-radius: 8px;
+  padding: 24px;
   width: 100%;
+`;
+export const QuizContainer = styled.div`
+  background: transparent;
+  border-radius: 8px;
+  padding: 24px;
+  width: 100%;
+
 `;
 
 export const QuizProgress = styled.div`
-  background: #F4F3FF;
-  padding: 12px;
+  background: #F5F5FF;
+  padding: 8px 16px;
   border-radius: 8px;
   text-align: center;
-  color: #666;
-  font-size: 14px;
   margin-bottom: 24px;
 `;
 
 export const QuizQuestion = styled.h2`
   font-size: 16px;
-  font-weight: 500;
-  color: #333;
   margin-bottom: 24px;
 `;
 
 export const OptionsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 24px;
+  width: 100%;
 `;
 
-export const OptionButton = styled.button<{ selected?: boolean }>`
+interface OptionButtonProps {
+  selected?: boolean;
+}
+
+export const OptionContainer = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
+  padding-left: 40px;
+`;
+
+export const OptionLabel = styled.div`
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-weight: 500;
+  color: #000000;
+`;
+
+export const OptionButton = styled.button<OptionButtonProps>`
+  display: flex;
+  align-items: center;
   width: 100%;
-  padding: 16px;
-  background-color: ${props => props.selected ? '#e3f2fd' : '#ffffff'};
-  border: 2px solid ${props => props.selected ? '#1976d2' : '#e0e0e0'};
+  min-height: 58px;
+  padding: 16px 12px;
   border-radius: 8px;
-  text-align: left;
-  font-size: 14px;
-  color: #333;
+  background: ${props => props.selected ? '#2B3084' : '#FFFFFF'};
+  color: ${props => props.selected ? '#FFFFFF' : '#000000'};
   cursor: pointer;
-  transition: all 0.2s;
+  text-align: left;
+  transition: all 0.2s ease;
+  border: 1px solid ${props => props.selected ? '#2B3084' : '#E5E5E5'};
 
   &:hover {
-    background-color: ${props => props.selected ? '#e3f2fd' : '#f5f5f5'};
+    background: ${props => props.selected ? '#2B3084' : '#F5F5FF'};
   }
-
-  .option-label {
-    width: 24px;
-    height: 24px;
-    border: 1px solid #E5E7EB;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 500;
-  }
-`; 
+`;
