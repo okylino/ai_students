@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { AssignmentListReq, AssignmentListResp } from '../models/assignment/assignmentList';
 import { UpdateAssignmentStatusReq, UpdateAssignmentStatusResp } from '../models/assignment/updateAssignmentStatus';
-import { AssignmentDetailReq, AssignmentDetailResp } from '../models/assignment/assignmentDetail';
+import { AssignmentDataDetailResp, AssignmentDetailReq, AssignmentDetailResp } from '../models/assignment/assignmentDetail';
 import baseQuery from '@/api/baseQuery';
 import defineEndpoints from '@/api/definedEndpoints';
 
@@ -21,7 +21,7 @@ export const assignmentApi = createApi({
     updateAssignmentStatus: mutation.put<UpdateAssignmentStatusResp, UpdateAssignmentStatusReq>('assignments/:assignment_id/status'),
 
     /** [POST] get assignment detail */
-    getAssignment: mutation.post<AssignmentDetailResp, AssignmentDetailReq>(
+    getAssignment: mutation.post<AssignmentDataDetailResp, AssignmentDetailReq>(
       '/assignment/:assignmentId',
       {
         query: (args) => ({
@@ -35,8 +35,16 @@ export const assignmentApi = createApi({
         transformResponse: (response: { data: AssignmentDetailResp }) => response.data
       }
     ),
+
+    getQuizById: query.get<AssignmentDataDetailResp, { assignmentId: string; quizId: string }>('assignments/:assignmentId/quizzes/:quizId'),
   })),
 });
 
-export const { useGetAssignmentListQuery, useUpdateAssignmentStatusMutation, useGetAssignmentMutation } = assignmentApi;
+export const {
+  useGetAssignmentListQuery,
+  useUpdateAssignmentStatusMutation,
+  useGetAssignmentMutation,
+  useGetQuizByIdQuery,
+  useLazyGetQuizByIdQuery
+} = assignmentApi;
 

@@ -1,4 +1,4 @@
-import { QuizData, Option as QuizOption } from '../../quiz/quiz.type';
+import { QuizData } from '../../quiz/quiz.type';
 
 export interface AssignmentDetailResp {
   lessonInsightId: string;
@@ -8,3 +8,7 @@ export interface AssignmentDetailResp {
   studentAnswer: number[];
   totalQuizzes: number;
 }
+
+export interface AssignmentDataDetailResp {
+  data: AssignmentDetailResp;
+  }

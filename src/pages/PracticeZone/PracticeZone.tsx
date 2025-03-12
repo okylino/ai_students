@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -17,62 +17,151 @@ import {
 import { Link } from 'react-router-dom';
 import { Quiz } from '@/components/Quiz';
 import { AIChat } from '@/components/AIChat';
-import { useGetAssignmentMutation } from '@/api/services/assignmentService';
+import { useGetAssignmentMutation, useLazyGetQuizByIdQuery } from '@/api/services/assignmentService';
 import LegalAndVersionInfo from '@fishing_cat/layouts/legalAndVersionInfo/LegalAndVersionInfo';
 import hintIcon from '@/assets/practice/Group.png';
+import { Loading } from '@/components/Loading';
 
 export const PracticeZone: FC = () => {
   const { assignmentId } = useParams();
   const { t } = useTranslation('practiceZone');
 
-  const [getAssignment, { data, isLoading, error }] = useGetAssignmentMutation();
+  const [getAssignment, { data: assignmentData, isLoading: isAssignmentLoading, error }] = useGetAssignmentMutation();
+  const [currentQuizId, setCurrentQuizId] = useState('');
+  const [currentQuizData, setCurrentQuizData] = useState<any>(null);
+  const [isQuizChanging, setIsQuizChanging] = useState(false);
+
+  const [getQuiz, { isLoading: isQuizLoading }] = useLazyGetQuizByIdQuery();
+
+  const [quizCache, setQuizCache] = useState<Record<string, any>>({});
 
   useEffect(() => {
-    let isSubscribed = true;
-
     if (assignmentId) {
-      getAssignment({ assignmentId })
-        .unwrap()
-        .then((response) => {
-          if (isSubscribed) {
-            console.log('Assignment data:', response);
-          }
-        })
-        .catch((err) => {
-          if (isSubscribed) {
-            console.error('Failed to fetch assignment:', err);
+      getAssignment({ assignmentId }).unwrap()
+        .then(response => {
+          if (response.quiz?.quizId) {
+            const quizId = response.quiz.quizId;
+            setCurrentQuizId(quizId);
+            setQuizCache(prev => ({
+              ...prev,
+              [quizId]: {
+                ...response.quiz,
+                nextQuizId: response.nextQuizId,
+                previousQuizId: response.previousQuizId,
+                studentAnswer: response.studentAnswer ? [response.studentAnswer] : [],
+                seq: response.quiz.seq
+              }
+            }));
           }
         });
     }
-
-    return () => {
-      isSubscribed = false;
-    };
   }, [assignmentId, getAssignment]);
 
-  if (data) {
-    console.log('PracticeZone data:', data);
-  }
+  useEffect(() => {
+    if (assignmentId && currentQuizId) {
+      if (quizCache[currentQuizId]) {
+        setCurrentQuizData(quizCache[currentQuizId]);
+        return;
+      }
 
-  if (isLoading) {
-    return <div>{t('loading')}</div>;
-  }
+      setIsQuizChanging(true);
+      getQuiz({ assignmentId, quizId: currentQuizId })
+        .unwrap()
+        .then(response => {
+          if (response.data.quiz) {
+            const quizData = {
+              ...response.data.quiz,
+              quizId: response.data.quiz.quizId,
+              optionType: response.data.quiz.optionType,
+              optionList: response.data.quiz.optionList.map(option => ({
+                ...option,
+                optionId: option.optionId,
+                isAiAnswer: option.isAiAnswer
+              })),
+              quizType: response.data.quiz.quizType,
+              chirpId: response.data.quiz.chirpId,
+              nextQuizId: response.data.nextQuizId,
+              previousQuizId: response.data.previousQuizId,
+              studentAnswer: response.data.studentAnswer ? [response.data.studentAnswer] : [],
+              seq: response.data.quiz.seq
+            };
+            setQuizCache(prev => ({
+              ...prev,
+              [currentQuizId]: quizData
+            }));
+            setCurrentQuizData(quizData);
+          }
+        })
+        .catch(error => {
+          console.error('Failed to fetch quiz:', error);
+        })
+        .finally(() => {
+          setIsQuizChanging(false);
+        });
+    }
+  }, [assignmentId, currentQuizId, getQuiz, quizCache]);
 
-  if (error) {
-    return <div>{t('error.loading')}</div>;
-  }
-
-  if (!data?.quiz) {
-    return <div>{t('error.noData')}</div>;
-  }
+  useEffect(() => {
+    return () => {
+      setCurrentQuizId('');
+      setCurrentQuizData(null);
+      setQuizCache({});
+    };
+  }, []);
 
   const handleAnswerSelect = (optionId: number) => {
-    console.log('Selected option:', optionId);
-    // TODO: 在这里添加处理答案的逻辑
+    if (!assignmentId || !currentQuizId) return;
+
+    try {
+      const updatedData = {
+        ...currentQuizData,
+        studentAnswer: currentQuizData.quizType === 'SINGLE_SELECT'
+          ? [optionId]  // 单选：直接替换为新选项
+          : currentQuizData.studentAnswer?.includes(optionId)
+            ? currentQuizData.studentAnswer.filter((id: number) => id !== optionId)  // 多选：如果已选中则移除
+            : [...(currentQuizData.studentAnswer || []), optionId]  // 多选：如果未选中则添加
+      };
+
+      setQuizCache(prev => ({
+        ...prev,
+        [currentQuizId]: updatedData
+      }));
+      setCurrentQuizData(updatedData);
+
+      console.log('Selected option:', optionId);
+    } catch (error) {
+      console.error('Failed to submit answer:', error);
+    }
+  };
+
+  const saveCurrentAnswer = async () => {
+    if (!currentQuizData?.studentAnswer?.length) return;
+
+    try {
+      console.log('Answer saved:', currentQuizData.studentAnswer[0]);
+    } catch (error) {
+      console.error('Failed to save answer:', error);
+    }
+  };
+
+  const handlePrevious = async () => {
+    if (currentQuizData?.previousQuizId) {
+      await saveCurrentAnswer();
+      setCurrentQuizId(currentQuizData.previousQuizId);
+    }
+  };
+
+  const handleNext = async () => {
+    if (currentQuizData?.nextQuizId) {
+      await saveCurrentAnswer();
+      setCurrentQuizId(currentQuizData.nextQuizId);
+    }
   };
 
   return (
     <PracticeZoneWrapper>
+      {(isAssignmentLoading || isQuizLoading || isQuizChanging || error || !assignmentData?.quiz) && <Loading />}
+
       <TopBar>
         <Navigation>
           <Link to='/my-class'>{t('navigation.myClass')}</Link>
@@ -96,19 +185,17 @@ export const PracticeZone: FC = () => {
 
       <ContentWrapper>
         <QuizSection>
-          <Quiz
-            quiz={data.quiz}
-            totalQuizzes={data.totalQuizzes}
-            currentQuiz={data.quiz.seq}
-            studentAnswer={data.studentAnswer}
-            onAnswerSelect={handleAnswerSelect}
-            onPrevious={function (): void {
-              throw new Error('Function not implemented.');
-            }}
-            onNext={function (): void {
-              throw new Error('Function not implemented.');
-            }}
-          ></Quiz>
+          {assignmentData?.quiz && currentQuizData && (
+            <Quiz
+              quiz={currentQuizData}
+              totalQuizzes={assignmentData.totalQuizzes}
+              currentQuiz={currentQuizData?.seq}
+              studentAnswer={currentQuizData?.studentAnswer}
+              onAnswerSelect={handleAnswerSelect}
+              onPrevious={handlePrevious}
+              onNext={handleNext}
+            />
+          )}
         </QuizSection>
 
         <ChatSection>
