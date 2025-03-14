@@ -25,5 +25,7 @@
   "error": {
     "fetchFailed": "Failed to fetch assignment data",
     "noAssignmentSelected": "No assignment selected"
-  }
+  },
+  "aiTeachingAssistant": "AI Teaching Assistant",
+  "expressYourIdeaOrThought": "Express your idea or thought..."
 }
