@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { Button } from '@mui/material';
 import { PRIMARY } from '../../styles/colors';
 import StarIcon from '../../assets/classes/BsStarFill.png';
-import KeyboardArrowUpIcon from '../../assets/classes/KeyboardArrowUp.png';
 
 export const Card = styled.div`
   background: #FFFFFF;
@@ -100,16 +99,16 @@ export const ActionButton = styled(Button)`
     height: 40px;
     text-transform: none;
     border-radius: 4px;
-    
+
     &.MuiButton-contained {
       background-color: ${PRIMARY.DEFAULT};
       color: white;
-      
+
       &:hover {
         background-color: ${PRIMARY.DEFAULT};
       }
     }
-    
+
     &.MuiButton-outlined {
       border-color: ${PRIMARY.DEFAULT};
       color: ${PRIMARY.DEFAULT};
@@ -141,8 +140,8 @@ export const SeeAllText = styled.div`
   color: ${({ theme }) => theme.palette.primary.main};
   margin-top: 16px;
   cursor: pointer;
-  
+
   &:hover {
     text-decoration: underline;
   }
-`; 
+`;

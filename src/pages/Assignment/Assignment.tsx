@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   AssignmentWrapper,
@@ -30,12 +30,21 @@ import LegalAndVersionInfo from '@fishing_cat/layouts/legalAndVersionInfo/LegalA
 export const Assignment: FC = () => {
   const { t, i18n } = useTranslation('assignment');
   const navigate = useNavigate();
+  const { lessonId } = useParams<{ lessonId: string }>();
   const [activeTab, setActiveTab] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number[]>>({});
   const [updateAssignmentStatus] = useUpdateAssignmentStatusMutation();
 
-  const lessonId = '3';
-  const { data: assignmentData, isLoading, error } = useGetAssignmentListQuery({ lesson_id: lessonId });
+  // Add debug logging for the lessonId parameter
+  console.log('URL Params - lessonId:', lessonId);
+
+  // Use the lessonId from URL params, fallback to '0' if not available
+  const currentLessonId = lessonId || '0';
+
+  // Log the query parameters being used
+  console.log('Fetching assignments with lesson_id:', currentLessonId);
+
+  const { data: assignmentData, isLoading, error } = useGetAssignmentListQuery({ lesson_id: currentLessonId });
 
   const assignments = assignmentData?.assignments || [];
   const currentAssignment = assignments.find((a) => a.id === activeTab);
@@ -107,7 +116,7 @@ export const Assignment: FC = () => {
 
   // 添加选择答案的处理函数
   const handleOptionClick = (quizId: string, optionId: number, quizType: string) => {
-    setQuizAnswers(prev => {
+    setQuizAnswers((prev) => {
       const newAnswers = { ...prev };
       const currentAnswers = prev[quizId] || [];
 
@@ -117,7 +126,7 @@ export const Assignment: FC = () => {
       } else {
         // 多选题：切换选中状态
         newAnswers[quizId] = currentAnswers.includes(optionId)
-          ? currentAnswers.filter(id => id !== optionId)
+          ? currentAnswers.filter((id) => id !== optionId)
           : [...currentAnswers, optionId];
       }
 
@@ -128,7 +137,7 @@ export const Assignment: FC = () => {
   // 添加处理点击事件的函数
   const handlePracticeClick = () => {
     if (currentAssignment) {
-      navigate(`/assignment/${currentAssignment.id}/practice`);
+      navigate(`/assignment/${currentLessonId}/practice/${currentAssignment.id}`);
     }
   };
 
@@ -136,9 +145,11 @@ export const Assignment: FC = () => {
     <>
       <AssignmentWrapper>
         <Navigation>
-          <Link to='/my-class'>{t('navigation.myClass')}</Link>
+          <Link to='/classes'>{t('navigation.myClass')}</Link>
           <Separator>/</Separator>
-          <span>{t('navigation.assignment')}</span>
+          <span>
+            {t('navigation.assignment')}
+          </span>
         </Navigation>
 
         <ContentWrapper>
@@ -231,9 +242,7 @@ export const Assignment: FC = () => {
                             <div key={`quiz-${quizId}`} className='quiz-card'>
                               <div className='quiz-header'>
                                 <span className='quiz-number'>{index + 1}.</span>
-                                <div className='quiz-question'>
-                                  {quiz.content}
-                                </div>
+                                <div className='quiz-question'>{quiz.content}</div>
                               </div>
                               <div className='quiz-options'>
                                 {quiz.optionList.map((option) => {
@@ -281,7 +290,6 @@ export const Assignment: FC = () => {
         </ContentWrapper>
         <LegalAndVersionInfo />
       </AssignmentWrapper>
-
     </>
   );
 };

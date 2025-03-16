@@ -17,17 +17,17 @@ export const lessonApi = createApi({
     getStudentQuizzes: query.get<LessonStudentQuizzesResp, LessonStudentQuizzesReq>(
       '/lessons/:lessonId/student_quizzes',
       {
-        transformResponse: (response: LessonStudentQuizzesResp) => ({
-          ...response,
-          data: sortByPinnedFirst(response.data),
+        transformResponse: (response: unknown) => ({
+          ...(response as LessonStudentQuizzesResp),
+          data: sortByPinnedFirst((response as LessonStudentQuizzesResp).data),
         }),
       },
     ),
     /** [GET] get student's quizzes */
     getStudentTasks: query.get<LessonStudentTasksResp, LessonStudentTasksReq>('/lessons/:lessonId/student_tasks', {
-      transformResponse: (response: LessonStudentTasksResp) => ({
-        ...response,
-        data: sortByPinnedFirst(response.data),
+      transformResponse: (response: unknown ) => ({
+        ...(response as LessonStudentTasksResp),
+        data: sortByPinnedFirst((response as LessonStudentTasksResp).data),
       }),
     }),
     /** [GET] get lesson performance */

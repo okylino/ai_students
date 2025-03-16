@@ -1,7 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { AssignmentListReq, AssignmentListResp } from '../models/assignment/assignmentList';
 import { UpdateAssignmentStatusReq, UpdateAssignmentStatusResp } from '../models/assignment/updateAssignmentStatus';
-import { AssignmentDataDetailResp, AssignmentDetailReq, AssignmentDetailResp } from '../models/assignment/assignmentDetail';
+import {
+  AssignmentDataDetailResp,
+  AssignmentDetailReq,
+  AssignmentDetailResp,
+} from '../models/assignment/assignmentDetail';
 import baseQuery from '@/api/baseQuery';
 import defineEndpoints from '@/api/definedEndpoints';
 
@@ -18,25 +22,28 @@ export const assignmentApi = createApi({
     getAssignmentList: query.get<AssignmentListResp, AssignmentListReq>('assignments/:lesson_id'),
 
     /** [PUT] update assignment status */
-    updateAssignmentStatus: mutation.put<UpdateAssignmentStatusResp, UpdateAssignmentStatusReq>('assignments/:assignment_id/status'),
-
-    /** [POST] get assignment detail */
-    getAssignment: mutation.post<AssignmentDataDetailResp, AssignmentDetailReq>(
-      '/assignment/:assignmentId',
-      {
-        query: (args) => ({
-          url: `/assignment/${args.assignmentId}`,
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }),
-        transformResponse: (response: { data: AssignmentDetailResp }) => response.data
-      }
+    updateAssignmentStatus: mutation.put<UpdateAssignmentStatusResp, UpdateAssignmentStatusReq>(
+      'assignments/:assignment_id/status',
     ),
 
-    getQuizById: query.get<AssignmentDataDetailResp, { assignmentId: string; quizId: string }>('assignments/:assignmentId/quizzes/:quizId'),
+    /** [POST] get assignment detail */
+    getAssignment: mutation.post<AssignmentDetailResp, AssignmentDetailReq>('/assignment/:assignmentId', {
+      query: (args) => ({
+        url: `/assignment/${args.assignmentId}`,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      }),
+      transformResponse: (response: unknown) => {
+        return (response as { data: AssignmentDetailResp }).data;
+      },
+    }),
+
+    getQuizById: query.get<AssignmentDataDetailResp, { assignmentId: string; quizId: string }>(
+      'assignments/:assignmentId/quizzes/:quizId',
+    ),
   })),
 });
 
@@ -45,6 +52,5 @@ export const {
   useUpdateAssignmentStatusMutation,
   useGetAssignmentMutation,
   useGetQuizByIdQuery,
-  useLazyGetQuizByIdQuery
+  useLazyGetQuizByIdQuery,
 } = assignmentApi;
-

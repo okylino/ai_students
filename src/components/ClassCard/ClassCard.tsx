@@ -18,100 +18,48 @@ import {
   ExpandButton,
   SeeAllText,
 } from './ClassCard.style';
-import { ClassCardProps, LessonWithStatus, LessonActionsProps } from './ClassCard.type';
+import { ClassCardProps, LessonActionsProps } from './ClassCard.type';
 import KeyboardArrowUpIcon from '../../assets/classes/KeyboardArrowUp.png';
 import { Badge } from '@mui/material';
-import { LessonStatus } from './ClassCard.enum';
 import { useNavigate } from 'react-router-dom';
 
 const MAX_VISIBLE_LESSONS = 3;
-
-// 修改示例数据以确保所有必要的字段都有值
-const mockLessons: LessonWithStatus[] = [
-  {
-    startTime: 'Jan 05, 2024 11:00',
-    stars: 0,
-    hasAssignment: false,
-    canJoin: true,
-    hasReview: false,
-    status: LessonStatus.UPCOMING,
-    unreadAssignments: 0,
-  },
-  {
-    startTime: 'Jan 06, 2024 11:00',
-    stars: 5,
-    hasAssignment: true,
-    canJoin: false,
-    hasReview: false, // 进行中的课程还没有复习选项
-    status: LessonStatus.IN_PROGRESS,
-    unreadAssignments: 2,
-  },
-  {
-    startTime: 'Jan 07, 2024 11:00',
-    stars: 3,
-    hasAssignment: true,
-    canJoin: false,
-    hasReview: true,
-    status: LessonStatus.COMPLETED,
-    unreadAssignments: 0,
-  },
-];
 
 // 将 LessonActions 组件声明为一个常量，确保只声明一次
 const LessonActions: React.FC<LessonActionsProps> = ({ lesson, onAssignmentClick, onReviewClick, onJoinClick }) => {
   const { t } = useTranslation('classes');
 
   // 根据课程状态显示不同的按钮
-  switch (lesson.status) {
-    case LessonStatus.UPCOMING:
-      return lesson.canJoin ? (
+   return  lesson.availableJoin ? (
         <ButtonGroup>
           <ActionButton variant='contained' onClick={onJoinClick}>
             {t('join')}
           </ActionButton>
         </ButtonGroup>
-      ) : null;
+      ) :  <ButtonGroup>
+      {!lesson.availableJoin && (
+        <Badge
+          badgeContent={lesson.unreadAssignmentCount}
+          color='error'
+          max={3}
+          invisible={!lesson.unreadAssignmentCount}
+        >
+          <ActionButton variant='outlined' onClick={onAssignmentClick}>
+            {t('assignment')}
+          </ActionButton>
+        </Badge>
+      )}
+      <ActionButton variant='outlined' onClick={onReviewClick}>
+        {t('review')}
+      </ActionButton>
+    </ButtonGroup>;
 
-    case LessonStatus.IN_PROGRESS:
-      return (
-        <ButtonGroup>
-          {lesson.hasAssignment && (
-            <Badge badgeContent={lesson.unreadAssignments} color='error' max={3} invisible={!lesson.unreadAssignments}>
-              <ActionButton variant='outlined' onClick={onAssignmentClick}>
-                {t('assignment')}
-              </ActionButton>
-            </Badge>
-          )}
-        </ButtonGroup>
-      );
-
-    case LessonStatus.COMPLETED:
-      return (
-        <ButtonGroup>
-          {lesson.hasAssignment && (
-            <Badge badgeContent={lesson.unreadAssignments} color='error' max={3} invisible={!lesson.unreadAssignments}>
-              <ActionButton variant='outlined' onClick={onAssignmentClick}>
-                {t('assignment')}
-              </ActionButton>
-            </Badge>
-          )}
-          {lesson.hasReview && (
-            <ActionButton variant='outlined' onClick={onReviewClick}>
-              {t('review')}
-            </ActionButton>
-          )}
-        </ButtonGroup>
-      );
-
-    default:
-      return null;
-  }
 };
 
 const ClassCard: React.FC<ClassCardProps> = ({
   title,
   classId,
-  lessons = mockLessons,
+  lessons = [],
   isexpanded,
   onExpand,
   onAssignmentClick,
@@ -120,6 +68,8 @@ const ClassCard: React.FC<ClassCardProps> = ({
   hideExpandButton = false,
   showAllLessons = false,
   hideSeeAllText = false,
+  roomNumber,
+  roomDisplayName,
 }) => {
   const { t } = useTranslation('classes');
   const navigate = useNavigate();
@@ -134,7 +84,7 @@ const ClassCard: React.FC<ClassCardProps> = ({
     <Card>
       <CardHeader>
         <HeaderTop>
-          <Title>{title}</Title>
+          <Title>{title || roomDisplayName}</Title>
           {!hideExpandButton && (
             <ExpandButton onClick={onExpand} isexpanded={isexpanded}>
               <img src={KeyboardArrowUpIcon} alt='expand' />
@@ -143,35 +93,46 @@ const ClassCard: React.FC<ClassCardProps> = ({
         </HeaderTop>
         <ClassId>
           {t('classIdLabel')}
-          {classId}
+          {classId || roomNumber}
         </ClassId>
       </CardHeader>
       <CardContent isexpanded={isexpanded}>
         <LessonList>
           {visibleLessons.map((lesson, index) => (
-            <LessonItem key={index}>
-              <TimeStamp>{lesson.startTime}</TimeStamp>
+            <LessonItem key={lesson.lessonId || index}>
+              <TimeStamp>{formatTimestamp(lesson.startTime)}</TimeStamp>
               <StarWrapper>
                 <StarIconImg />
-                <StarCount>{lesson.stars}</StarCount>
+                <StarCount>{lesson.points}</StarCount>
               </StarWrapper>
               <LessonActions
                 lesson={lesson}
-                onAssignmentClick={onAssignmentClick}
+                onAssignmentClick={()=>onAssignmentClick(lesson.lessonId)}
                 onReviewClick={onReviewClick}
                 onJoinClick={onJoinClick}
               />
             </LessonItem>
           ))}
           {!hideSeeAllText && hasMoreLessons && !showAllLessons && (
-            <SeeAllText onClick={handleSeeAllClick}>
-              {t('seeAllLessons', { count: lessons.length })}
-            </SeeAllText>
+            <SeeAllText onClick={handleSeeAllClick}>{t('seeAllLessons', { count: lessons.length })}</SeeAllText>
           )}
         </LessonList>
       </CardContent>
     </Card>
   );
 };
+
+// 添加一个辅助函数来格式化时间戳
+function formatTimestamp(timestamp: number): string {
+  const date = new Date(timestamp * 1000);
+  return date.toLocaleString('en-US', {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+}
 
 export default ClassCard;

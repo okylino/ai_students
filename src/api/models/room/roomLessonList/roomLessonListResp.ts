@@ -17,4 +17,5 @@ export interface LessonInfo {
   endTime: number;
   points: number;
   availableJoin: boolean;
+  unreadAssignmentCount: number;
 }

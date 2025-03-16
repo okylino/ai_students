@@ -21,7 +21,7 @@ export const routes: RouteObject[] = [
         element: <MyClass />,
       },
       {
-        path: '/assigment',
+        path: '/assignment/:lessonId',
         element: <Assignment />,
       }, {
         path: '/classes',
@@ -31,7 +31,7 @@ export const routes: RouteObject[] = [
         element: <ClassDetail />,
       },
       {
-        path: '/assignment/:assignmentId/practice',
+        path: '/assignment/:lessonId/practice/:assignmentId',
         element: <PracticeZone />
       },
       { path: '*', element: <Navigate to='/' /> },
