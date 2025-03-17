@@ -291,7 +291,6 @@ export const PracticeSection = styled.div`
 
   .quiz-card {
     width: 700px;
-    height: 206px;
     padding: 16px;
     border-radius: 8px;
     box-shadow: 0px 0px 6px 0px #00000029;
@@ -327,6 +326,7 @@ export const PracticeSection = styled.div`
     flex-direction: column;
     gap: 8px;
     padding-left: 24px;
+    position: relative;
 
     .option {
       display: flex;
@@ -334,42 +334,116 @@ export const PracticeSection = styled.div`
       gap: 12px;
       padding: 8px 16px;
       height: 26px;
-      cursor: pointer;
+      cursor: default;
       transition: all 0.3s ease;
       width: 100%;
+      border-radius: 4px;
+      position: relative;
 
-      &:hover {
-        background-color: rgba(43, 48, 132, 0.05);
+      &::before {
+        content: '';
+        position: absolute;
+        left: -24px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        font-size: 16px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       &.selected {
-        color: #2B3084;
-        background-color: rgba(43, 48, 132, 0.1);
+        &.correct {
+          color: #52C41A;
+
+          &::before {
+            content: '✓';
+            color: #52C41A;
+          }
+        }
+
+        &.incorrect {
+          color: #FF4D4F;
+
+          &::before {
+            content: '×';
+            color: #FF4D4F;
+          }
+        }
+      }
+
+      &.correct-answer {
+        color: #52C41A;
+
+        &::before {
+          content: '✓';
+          font-weight: 800;
+          color: #52C41A;
+        }
       }
 
       .option-label {
         font-weight: 500;
         min-width: 24px;
-        color: #333;
+        color: inherit;
       }
 
       .option-content {
         flex: 1;
-        color: #333;
+        color: inherit;
       }
     }
   }
 
-  .quiz-result {
-    margin-top: 16px;
+  .show-explanation {
+    font-weight: 500;
     font-size: 14px;
+    line-height: 120%;
+    letter-spacing: 0.15px;
+    text-decoration: underline;
+    text-decoration-style: solid;
+    color: #A4A4A4;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-top: 16px;
+    padding: 0;
+    text-align: left;
+    margin-left: 24px;
 
-    &.correct {
-      color: #52C41A;
+    &:hover {
+      opacity: 0.8;
     }
+  }
 
-    &.incorrect {
-      color: #FF4D4F;
+  .explanation-section {
+    margin-top: 12px;
+    padding-left: 24px;
+
+    .explanation-item {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: flex-start;
+      
+      .explanation-label {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 120%;
+        letter-spacing: 0.15px;
+        color: #333;
+        margin-right: 8px;
+        min-width: 24px;
+      }
+
+      .explanation-content {
+        font-size: 14px;
+        line-height: 120%;
+        color: #666;
+        flex: 1;
+      }
     }
   }
 `;

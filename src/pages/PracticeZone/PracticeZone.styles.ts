@@ -96,4 +96,72 @@ export const ChatSection = styled.div`
   padding: 24px;
   width: 828px;
   margin: 0 auto;
+`;
+
+export const ErrorToast = styled.div`
+  position: fixed;
+  width: 440px;
+  height: 48px;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 16px;
+  background: #FFFFFF;
+  border: 2px solid #F02B2B;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000;
+  animation: slideDown 0.3s ease-out;
+
+  @keyframes slideDown {
+    from {
+      transform: translateX(-50%) translateY(-100%);
+    }
+    to {
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+`;
+
+export const ErrorIconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const ErrorMessage = styled.span`
+  color: #000000;
+  font-size: 14px;
+  line-height: 22px;
+`;
+
+export const CloseButton = styled.button`
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 2px;
+    background-color: #F02B2B;
+  }
+  
+  &::before {
+    transform: rotate(45deg);
+  }
+  
+  &::after {
+    transform: rotate(-45deg);
+  }
 `; 

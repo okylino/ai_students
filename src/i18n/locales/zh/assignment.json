@@ -1,5 +1,5 @@
 {
-  "title": "{{date}} 作业",
+  "title": "作业 {date}",
   "loading": "加载中...",
   "objective": "目标",
   "viewResource": "查看资源",
@@ -9,21 +9,40 @@
   },
   "extendedMaterials": {
     "title": "扩展材料",
-    "description": "在做以下练习之前，请查看以下资源。这些资源将帮助你更好地理解概念。"
+    "description": "以下是一些可以帮助你更好地理解本次作业的扩展材料",
+    "noMaterials": "暂无扩展材料"
   },
   "moreExercises": {
-    "title": "更多练习",
-    "description": "通过更多练习来提高你的能力",
-    "practiceWithAI": "与 AI 一起练习",
-    "practiceNow": "立即练习",
-    "dueDate": "截止日期: {{date}}"
+    "title": "练习",
+    "description": "通过AI辅导来练习和巩固你的知识",
+    "practiceWithAI": "与AI助教一起练习",
+    "dueDate": "截止日期：{date}",
+    "practiceNow": "开始练习"
   },
   "noAssignment": {
     "title": "暂无作业",
     "description": "当前没有可用的作业"
   },
   "error": {
-    "fetchFailed": "获取作业数据失败",
-    "noAssignmentSelected": "未选择作业"
+    "fetchFailed": "获取作业失败",
+    "noAssignmentSelected": "未选择作业",
+    "failedToSendMessage": "发送消息失败，请重试",
+    "failedToStopGeneration": "停止生成失败，请重试"
+  },
+  "aiTeachingAssistant": "AI 助教",
+  "Express your idea or thought...": "输入你的想法或问题...",
+  "Send message": "发送消息",
+  "Stop generating": "停止生成",
+  "feedback": {
+    "question": "AI 助教是否对你有帮助?",
+    "whatWentWrong": "出了什么问题?",
+    "importantOpinion": "你的意见对我们很重要 - 我们很想听听更多!",
+    "feedbackOnly": "请注意,这个表单仅用于反馈,您不会收到回复。",
+    "tellMore": "告诉我们更多(可选)",
+    "submit": "提交",
+    "success": {
+      "title": "谢谢!",
+      "message": "你的反馈帮助我们创造更好的 ClassSwift 体验!"
+    }
   }
 } 

@@ -27,5 +27,19 @@
     "noAssignmentSelected": "No assignment selected"
   },
   "aiTeachingAssistant": "AI Teaching Assistant",
-  "expressYourIdeaOrThought": "Express your idea or thought..."
+  "expressYourIdeaOrThought": "Express your idea or thought...",
+  "showExplanation": "Show Explanation",
+  "feedback": {
+    "whatWentWrong": "What went wrong?",
+    "importantOpinion": "Important Opinion",
+    "feedbackOnly": "Feedback only",
+    "tellMore": "Tell me more...",
+    "submit": "Submit",
+    "reasons": {
+      "UNCLEAR": "The chatbot's response were unclear or confusing",
+      "UNFRIENDLY": "The chatbot's tone was not friendly or encouraging",
+      "NO_RESPONSE": "The chatbot took too long to respond or didn't respond at all"
+      }
+    }
+ 
 }

@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   PracticeZoneWrapper,
@@ -13,25 +13,39 @@ import {
   ContentWrapper,
   QuizSection,
   ChatSection,
+  ErrorToast,
+  ErrorIconContainer,
+  ErrorMessage,
+  CloseButton,
 } from './PracticeZone.styles';
 import { Link } from 'react-router-dom';
 import { Quiz } from '@/components/Quiz';
 import { AIChat } from '@/components/AIChat';
-import { useGetAssignmentMutation, useLazyGetQuizByIdQuery } from '@/api/services/assignmentService';
+import { 
+  useGetAssignmentMutation, 
+  useLazyGetQuizByIdQuery,
+  useSubmitQuizAnswerMutation,
+  useSubmitAssignmentMutation,
+} from '@/api/services/assignmentService';
 import LegalAndVersionInfo from '@fishing_cat/layouts/legalAndVersionInfo/LegalAndVersionInfo';
 import hintIcon from '@/assets/practice/Group.png';
+import warningIcon from '@/assets/assignment/Icon_Warning.png';
 import { Loading } from '@/components/Loading';
 
 export const PracticeZone: FC = () => {
-  const { assignmentId } = useParams();
+  const { assignmentId, lessonId } = useParams();
+  const navigate = useNavigate();
   const { t } = useTranslation('practiceZone');
 
-  const [getAssignment, { data: assignmentData, isLoading: isAssignmentLoading, error }] = useGetAssignmentMutation();
+  const [getAssignment, { data: assignmentData, isLoading: isAssignmentLoading }] = useGetAssignmentMutation();
   const [currentQuizId, setCurrentQuizId] = useState('');
   const [currentQuizData, setCurrentQuizData] = useState<any>(null);
   const [isQuizChanging, setIsQuizChanging] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [getQuiz, { isLoading: isQuizLoading }] = useLazyGetQuizByIdQuery();
+  const [submitQuizAnswer] = useSubmitQuizAnswerMutation();
+  const [submitAssignment] = useSubmitAssignmentMutation();
 
   const [quizCache, setQuizCache] = useState<Record<string, any>>({});
 
@@ -53,6 +67,10 @@ export const PracticeZone: FC = () => {
               }
             }));
           }
+        })
+        .catch(error => {
+          console.error('Failed to fetch assignment:', error);
+          setErrorMessage('Failed to fetch assignment. Please try again.');
         });
     }
   }, [assignmentId, getAssignment]);
@@ -109,17 +127,17 @@ export const PracticeZone: FC = () => {
     };
   }, []);
 
-  const handleAnswerSelect = (optionId: number) => {
+  const handleAnswerSelect = async (optionId: number) => {
     if (!assignmentId || !currentQuizId) return;
 
     try {
       const updatedData = {
         ...currentQuizData,
         studentAnswer: currentQuizData.quizType === 'SINGLE_SELECT'
-          ? [optionId]  // 单选：直接替换为新选项
+          ? [optionId]
           : currentQuizData.studentAnswer?.includes(optionId)
-            ? currentQuizData.studentAnswer.filter((id: number) => id !== optionId)  // 多选：如果已选中则移除
-            : [...(currentQuizData.studentAnswer || []), optionId]  // 多选：如果未选中则添加
+            ? currentQuizData.studentAnswer.filter((id: number) => id !== optionId)
+            : [...(currentQuizData.studentAnswer || []), optionId]
       };
 
       setQuizCache(prev => ({
@@ -128,39 +146,46 @@ export const PracticeZone: FC = () => {
       }));
       setCurrentQuizData(updatedData);
 
-      console.log('Selected option:', optionId);
+      await submitQuizAnswer({
+        assignmentId,
+        quizId: currentQuizId,
+        body: {
+          student_answer: updatedData.studentAnswer
+        }
+      }).unwrap();
+
     } catch (error) {
       console.error('Failed to submit answer:', error);
+      setErrorMessage('Failed to submit answer. Please try again.');
     }
   };
 
-  const saveCurrentAnswer = async () => {
-    if (!currentQuizData?.studentAnswer?.length) return;
+  const handleSubmitAssignment = async () => {
+    if (!assignmentId) return;
+
+    const totalAnswered = Object.values(quizCache).filter(quiz => quiz.studentAnswer?.length > 0).length;
+    const totalQuizzes = assignmentData?.totalQuizzes || 0;
+    
+    if (totalAnswered < totalQuizzes) {
+      setErrorMessage(`Please check if all ${totalQuizzes} questions have been answered before submitting.`);
+      return;
+    }
 
     try {
-      console.log('Answer saved:', currentQuizData.studentAnswer[0]);
+      await submitAssignment({ assignmentId }).unwrap();
+      // Navigate back to assignment page with state
+      navigate(`/assignment/${lessonId}`, {
+        state: { fromPractice: true }
+      });
     } catch (error) {
-      console.error('Failed to save answer:', error);
-    }
-  };
-
-  const handlePrevious = async () => {
-    if (currentQuizData?.previousQuizId) {
-      await saveCurrentAnswer();
-      setCurrentQuizId(currentQuizData.previousQuizId);
-    }
-  };
-
-  const handleNext = async () => {
-    if (currentQuizData?.nextQuizId) {
-      await saveCurrentAnswer();
-      setCurrentQuizId(currentQuizData.nextQuizId);
+      console.error('Failed to submit assignment:', error);
+      setErrorMessage('Failed to submit assignment. Please try again.');
     }
   };
 
   return (
     <PracticeZoneWrapper>
-      {(isAssignmentLoading || isQuizLoading || isQuizChanging || error || !assignmentData?.quiz) && <Loading />}
+      {(isAssignmentLoading || isQuizLoading || isQuizChanging || !assignmentData?.quiz) && <Loading />}
 
       <TopBar>
         <Navigation>
@@ -170,8 +195,18 @@ export const PracticeZone: FC = () => {
           <Separator>/</Separator>
           <span>{t('navigation.practiceZone')}</span>
         </Navigation>
-        <SubmitButton>{t('submit')}</SubmitButton>
+        <SubmitButton onClick={handleSubmitAssignment}>{t('submit')}</SubmitButton>
       </TopBar>
+
+      {errorMessage && (
+        <ErrorToast>
+          <ErrorIconContainer>
+            <img src={warningIcon} alt="Warning" width={24} height={24} />
+            <ErrorMessage>{errorMessage}</ErrorMessage>
+          </ErrorIconContainer>
+          <CloseButton onClick={() => setErrorMessage(null)} />
+        </ErrorToast>
+      )}
 
       <HintWrapper>
         <HintIcon src={hintIcon} alt='hint' />
@@ -192,14 +227,25 @@ export const PracticeZone: FC = () => {
               currentQuiz={currentQuizData?.seq}
               studentAnswer={currentQuizData?.studentAnswer}
               onAnswerSelect={handleAnswerSelect}
-              onPrevious={handlePrevious}
-              onNext={handleNext}
+              onPrevious={() => {
+                if (currentQuizData?.previousQuizId) {
+                  setCurrentQuizId(currentQuizData.previousQuizId);
+                }
+              }}
+              onNext={() => {
+                if (currentQuizData?.nextQuizId) {
+                  setCurrentQuizId(currentQuizData.nextQuizId);
+                }
+              }}
             />
           )}
         </QuizSection>
 
         <ChatSection>
-          <AIChat />
+          <AIChat 
+            assignmentId={assignmentId || ''} 
+            quizId={currentQuizId} 
+          />
         </ChatSection>
       </ContentWrapper>
 
