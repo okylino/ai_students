@@ -334,44 +334,45 @@ export const PracticeSection = styled.div`
       gap: 12px;
       padding: 8px 16px;
       height: 26px;
-      cursor: default;
+      position: relative;
+      border-radius: 4px;
       transition: all 0.3s ease;
       width: 100%;
-      border-radius: 4px;
-      position: relative;
 
-      &::before {
-        content: '';
-        position: absolute;
-        left: -24px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 16px;
-        height: 16px;
-        font-size: 16px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      &.selected.correct,
+      &.selected.incorrect,
+      &.correct-answer {
+        &::before {
+          content: '';
+          position: absolute;
+          left: -24px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 16px;
+          height: 16px;
+          font-size: 16px;
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
       }
 
-      &.selected {
-        &.correct {
+      &.selected.correct {
+        color: #52C41A;
+
+        &::before {
+          content: '✓';
           color: #52C41A;
-
-          &::before {
-            content: '✓';
-            color: #52C41A;
-          }
         }
+      }
 
-        &.incorrect {
+      &.selected.incorrect {
+        color: #FF4D4F;
+
+        &::before {
+          content: '×';
           color: #FF4D4F;
-
-          &::before {
-            content: '×';
-            color: #FF4D4F;
-          }
         }
       }
 
@@ -382,6 +383,18 @@ export const PracticeSection = styled.div`
           content: '✓';
           font-weight: 800;
           color: #52C41A;
+        }
+      }
+
+      &.clickable {
+        cursor: pointer;
+
+        &:hover {
+          background-color: rgba(24, 144, 255, 0.1);
+        }
+
+        &.selected {
+          background-color: rgba(24, 144, 255, 0.2);
         }
       }
 

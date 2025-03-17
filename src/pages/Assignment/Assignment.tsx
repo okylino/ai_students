@@ -128,8 +128,10 @@ export const Assignment: FC = () => {
     }
   }, [location.state, currentAssignment]);
 
-  // 添加选择答案的处理函数
+  // 修改 handleOptionClick 函数，添加调试信息但不改变原有逻辑
   const handleOptionClick = (quizId: string, optionId: number, quizType: string) => {
+    console.log('Option clicked:', { quizId, optionId, quizType });
+    
     setQuizAnswers((prev) => {
       const newAnswers = { ...prev };
       const currentAnswers = prev[quizId] || [];
@@ -144,6 +146,7 @@ export const Assignment: FC = () => {
           : [...currentAnswers, optionId];
       }
 
+      console.log('New answers state:', newAnswers);
       return newAnswers;
     });
   };
@@ -340,11 +343,16 @@ export const Assignment: FC = () => {
                               <div className='quiz-options'>
                                 {quiz.optionList.map((option) => {
                                   const optionLabel = String.fromCharCode(65 + option.optionId - 1);
+                                  const isSelected = currentAnswers.includes(option.optionId);
+                                  
                                   return (
                                     <div
                                       key={`option-${quizId}-${option.optionId}`}
-                                      className={`option ${currentAnswers.includes(option.optionId) ? 'selected' : ''}`}
-                                      onClick={() => handleOptionClick(quizId, option.optionId, quiz.quizType)}
+                                      className={`option clickable ${isSelected ? 'selected' : ''}`}
+                                      onClick={() => {
+                                        console.log('Option clicked directly');
+                                        handleOptionClick(quizId, option.optionId, quiz.quizType);
+                                      }}
                                     >
                                       <span className='option-label'>{optionLabel}.</span>
                                       <span className='option-content'>{option.content}</span>

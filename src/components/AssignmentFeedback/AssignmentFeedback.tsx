@@ -41,24 +41,25 @@ export const AssignmentFeedback: FC<FeedbackProps> = ({ assignmentId, onClose })
   const [additionalFeedback, setAdditionalFeedback] = useState('');
   const [submitFeedback] = useSubmitFeedbackMutation();
 
-  const handleYesClick = async () => {
-    try {
-      await submitFeedback({
-        assignment_id: assignmentId,
-        overall: false
-      }).unwrap();
-      setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        onClose();
-      }, 3000);
-    } catch (error) {
-      console.error('Failed to submit feedback:', error);
-    }
+  const handleYesClick =  () => {
+    setShowForm(true);
+  
   };
 
-  const handleNoClick = () => {
-    setShowForm(true);
+  const handleNoClick =async () => {
+    try {
+        await submitFeedback({
+          assignment_id: assignmentId,
+          overall: false
+        }).unwrap();
+        setShowSuccess(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          onClose();
+        }, 3000);
+      } catch (error) {
+        console.error('Failed to submit feedback:', error);
+      }
   };
 
   const handleSubmit = async () => {
