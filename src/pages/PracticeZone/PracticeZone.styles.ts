@@ -17,17 +17,17 @@ export const Navigation = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  
+
   a {
     color: #666;
     text-decoration: none;
     font-size: 14px;
-    
+
     &:hover {
       color: #333;
     }
   }
-  
+
   span {
     color: #666;
     font-size: 14px;
@@ -39,14 +39,16 @@ export const Separator = styled.span`
 `;
 
 export const SubmitButton = styled.button`
-  background: #3D4EEA;
+  background: #2b3084;
   color: white;
   border: none;
   border-radius: 4px;
   padding: 8px 24px;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  
+  height: 48px;
+  width: 180px;
   &:hover {
     background: #2e3bb1;
   }
@@ -106,8 +108,8 @@ export const ErrorToast = styled.div`
   left: 50%;
   transform: translateX(-50%);
   padding: 12px 16px;
-  background: #FFFFFF;
-  border: 2px solid #F02B2B;
+  background: #ffffff;
+  border: 2px solid #f02b2b;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -147,21 +149,21 @@ export const CloseButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   &::before,
   &::after {
     content: '';
     position: absolute;
     width: 16px;
     height: 2px;
-    background-color: #F02B2B;
+    background-color: #f02b2b;
   }
-  
+
   &::before {
     transform: rotate(45deg);
   }
-  
+
   &::after {
     transform: rotate(-45deg);
   }
-`; 
+`;

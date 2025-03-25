@@ -37,7 +37,7 @@ export const Quiz: FC<QuizProps> = ({
     studentAnswer,
     onAnswerSelect,
     onPrevious,
-    onNext
+    onNext,
   });
 
   console.log('quiz:', quiz);
@@ -56,6 +56,24 @@ export const Quiz: FC<QuizProps> = ({
     }
   };
 
+  // 更可靠地检查是否有选择答案
+  const hasSelectedAnswer = Boolean(studentAnswer && Array.isArray(studentAnswer) && studentAnswer.length > 0);
+
+  // 确保当前题目的答案存在且不为空
+  const currentQuizHasAnswer =
+    hasSelectedAnswer &&
+    studentAnswer.some((answer) => {
+      // 如果答案是对象，可能需要检查其属性
+      if (typeof answer === 'object' && answer !== null) {
+        return answer.quizId === quiz.quizId; // 假设答案对象有quizId属性
+      }
+      // 如果答案只是ID，则只需要确保它存在
+      return Boolean(answer);
+    });
+
+  // 最终禁用条件：当前是最后一题或没有选择答案
+  const shouldDisableNext = currentQuiz === totalQuizzes || currentQuiz === 0 || !currentQuizHasAnswer;
+
   return (
     <QuizContainer>
       <QuizWrapper>
@@ -66,31 +84,25 @@ export const Quiz: FC<QuizProps> = ({
           <QuizQuestion>{quiz.content}</QuizQuestion>
         </QuizContent>
         <NavigationButtons>
-          <NavButton 
-            onClick={() => handleNavigation('prev')} 
-            disabled={currentQuiz === 1}
-            $prev
-          />
-          <NavButton 
-            onClick={() => handleNavigation('next')}
-            disabled={currentQuiz === totalQuizzes || currentQuiz === 0}
-          />
+          <NavButton onClick={() => handleNavigation('prev')} disabled={currentQuiz === 1} $prev />
+          <NavButton onClick={() => handleNavigation('next')} disabled={shouldDisableNext} />
         </NavigationButtons>
       </QuizWrapper>
       <OptionsGrid>
-        {Array.isArray(quiz.optionList) && quiz.optionList.map((option, index) => (
-          <div key={option.optionId || index}>
-            <OptionContainer>
-              <OptionLabel>{optionLabels[index]}</OptionLabel>
-              <OptionButton
-                onClick={() => onAnswerSelect(option.optionId)}
-                selected={studentAnswer?.includes(option.optionId)}
-              >
-                {option.content || ''}
-              </OptionButton>
-            </OptionContainer>
-          </div>
-        ))}
+        {Array.isArray(quiz.optionList) &&
+          quiz.optionList.map((option, index) => (
+            <div key={option.optionId || index}>
+              <OptionContainer>
+                <OptionLabel>{optionLabels[index]}</OptionLabel>
+                <OptionButton
+                  onClick={() => onAnswerSelect(option.optionId)}
+                  selected={studentAnswer?.includes(option.optionId)}
+                >
+                  {option.content || ''}
+                </OptionButton>
+              </OptionContainer>
+            </div>
+          ))}
       </OptionsGrid>
     </QuizContainer>
   );

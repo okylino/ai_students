@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const QuizWrapper = styled.div`
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 8px;
   padding: 24px;
   min-height: 207px;
@@ -20,7 +20,7 @@ export const QuizContainer = styled.div`
 `;
 
 export const QuizProgress = styled.div`
-  background: #F5F5FF;
+  background: #f5f5ff;
   padding: 8px 16px;
   border-radius: 8px;
   text-align: center;
@@ -53,7 +53,7 @@ export const NavButton = styled.button<NavButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #EDEDFD;
+  background-color: #ededfd;
   transition: background-color 0.2s ease;
 
   &::before {
@@ -62,36 +62,38 @@ export const NavButton = styled.button<NavButtonProps>`
     height: 8px;
     border-style: solid;
     border-width: 2px 2px 0 0;
-    border-color: #2B3084;
-    transform: ${({ $prev }) => $prev ? 'rotate(-135deg)' : 'rotate(45deg)'};
+    border-color: #2b3084;
+    transform: ${({ $prev }) => ($prev ? 'rotate(-135deg)' : 'rotate(45deg)')};
     display: inline-block;
     transition: border-color 0.2s ease;
   }
 
   &:hover:not(:disabled) {
-    background-color: #6D6DF3;
+    background-color: #6d6df3;
     &::before {
       border-color: white;
     }
   }
 
   &:active:not(:disabled) {
-    background-color: #3B3BD1;
+    background-color: #3b3bd1;
     &::before {
       border-color: white;
     }
   }
 
   &:disabled {
-    background-color: #CFCFCF;
+    background-color: #cfcfcf;
     cursor: not-allowed;
     &::before {
-      border-color: #FFFFFF;
+      border-color: #ffffff;
       opacity: 0.5;
     }
   }
 
-  ${props => props.$prev && `
+  ${(props) =>
+    props.$prev &&
+    `
     // prev 相关的样式
   `}
 `;
@@ -130,14 +132,14 @@ export const OptionButton = styled.button<{ selected?: boolean }>`
   min-height: 58px;
   padding: 16px 12px;
   border-radius: 8px;
-  background: ${props => props.selected ? '#2B3084' : '#FFFFFF'};
-  color: ${props => props.selected ? '#FFFFFF' : '#000000'};
-  border: 1px solid ${props => props.selected ? '#2B3084' : '#E5E5E5'};
+  background: ${(props) => (props.selected ? '#2B3084' : '#FFFFFF')};
+  color: ${(props) => (props.selected ? '#FFFFFF' : '#000000')};
+  border: 1px solid ${(props) => (props.selected ? '#2B3084' : '#E5E5E5')};
   cursor: pointer;
   text-align: left;
   transition: all 0.2s ease;
 
   &:hover {
-    background: ${props => props.selected ? '#2B3084' : '#F5F5FF'};
+    background: ${(props) => (props.selected ? '#2B3084' : '#F5F5FF')};
   }
 `;

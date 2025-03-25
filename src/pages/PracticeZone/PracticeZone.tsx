@@ -1,36 +1,38 @@
 import { FC, useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
+import LegalAndVersionInfo from '@fishing_cat/layouts/legalAndVersionInfo/LegalAndVersionInfo';
 import {
-  PracticeZoneWrapper,
-  TopBar,
-  Navigation,
-  Separator,
-  SubmitButton,
-  HintWrapper,
-  HintIcon,
-  HintText,
-  ContentWrapper,
-  QuizSection,
+  useGetAssignmentMutation,
+  useLazyGetQuizByIdQuery,
+  useSubmitAssignmentMutation,
+  useSubmitQuizAnswerMutation,
+} from '@/api/services/assignmentService';
+import warningIcon from '@/assets/assignment/Icon_Warning.png';
+import hintIcon from '@/assets/practice/Group.png';
+import { AIChat } from '@/components/AIChat';
+import { Loading } from '@/components/Loading';
+import { Quiz } from '@/components/Quiz';
+
+import {
   ChatSection,
-  ErrorToast,
+  CloseButton,
+  ContentWrapper,
   ErrorIconContainer,
   ErrorMessage,
-  CloseButton,
+  ErrorToast,
+  HintIcon,
+  HintText,
+  HintWrapper,
+  Navigation,
+  PracticeZoneWrapper,
+  QuizSection,
+  Separator,
+  SubmitButton,
+  TopBar,
 } from './PracticeZone.styles';
-import { Link } from 'react-router-dom';
-import { Quiz } from '@/components/Quiz';
-import { AIChat } from '@/components/AIChat';
-import { 
-  useGetAssignmentMutation, 
-  useLazyGetQuizByIdQuery,
-  useSubmitQuizAnswerMutation,
-  useSubmitAssignmentMutation,
-} from '@/api/services/assignmentService';
-import LegalAndVersionInfo from '@fishing_cat/layouts/legalAndVersionInfo/LegalAndVersionInfo';
-import hintIcon from '@/assets/practice/Group.png';
-import warningIcon from '@/assets/assignment/Icon_Warning.png';
-import { Loading } from '@/components/Loading';
 
 export const PracticeZone: FC = () => {
   const { assignmentId, lessonId } = useParams();
@@ -51,24 +53,25 @@ export const PracticeZone: FC = () => {
 
   useEffect(() => {
     if (assignmentId) {
-      getAssignment({ assignmentId }).unwrap()
-        .then(response => {
+      getAssignment({ assignmentId })
+        .unwrap()
+        .then((response) => {
           if (response.quiz?.quizId) {
-            const quizId = response.quiz.quizId;
+            const { quizId } = response.quiz;
             setCurrentQuizId(quizId);
-            setQuizCache(prev => ({
+            setQuizCache((prev) => ({
               ...prev,
               [quizId]: {
                 ...response.quiz,
                 nextQuizId: response.nextQuizId,
                 previousQuizId: response.previousQuizId,
                 studentAnswer: response.studentAnswer ? [response.studentAnswer] : [],
-                seq: response.quiz.seq
-              }
+                seq: response.quiz.seq,
+              },
             }));
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Failed to fetch assignment:', error);
           setErrorMessage('Failed to fetch assignment. Please try again.');
         });
@@ -85,32 +88,32 @@ export const PracticeZone: FC = () => {
       setIsQuizChanging(true);
       getQuiz({ assignmentId, quizId: currentQuizId })
         .unwrap()
-        .then(response => {
+        .then((response) => {
           if (response.data.quiz) {
             const quizData = {
               ...response.data.quiz,
               quizId: response.data.quiz.quizId,
               optionType: response.data.quiz.optionType,
-              optionList: response.data.quiz.optionList.map(option => ({
+              optionList: response.data.quiz.optionList.map((option) => ({
                 ...option,
                 optionId: option.optionId,
-                isAiAnswer: option.isAiAnswer
+                isAiAnswer: option.isAiAnswer,
               })),
               quizType: response.data.quiz.quizType,
               chirpId: response.data.quiz.chirpId,
               nextQuizId: response.data.nextQuizId,
               previousQuizId: response.data.previousQuizId,
               studentAnswer: response.data.studentAnswer ? [response.data.studentAnswer] : [],
-              seq: response.data.quiz.seq
+              seq: response.data.quiz.seq,
             };
-            setQuizCache(prev => ({
+            setQuizCache((prev) => ({
               ...prev,
-              [currentQuizId]: quizData
+              [currentQuizId]: quizData,
             }));
             setCurrentQuizData(quizData);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Failed to fetch quiz:', error);
         })
         .finally(() => {
@@ -119,30 +122,32 @@ export const PracticeZone: FC = () => {
     }
   }, [assignmentId, currentQuizId, getQuiz, quizCache]);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       setCurrentQuizId('');
       setCurrentQuizData(null);
       setQuizCache({});
-    };
-  }, []);
+    },
+    [],
+  );
 
   const handleAnswerSelect = async (optionId: number) => {
     if (!assignmentId || !currentQuizId) return;
-
+    console.log('handle  Answ', assignmentId, '------', currentQuizId);
     try {
       const updatedData = {
         ...currentQuizData,
-        studentAnswer: currentQuizData.quizType === 'SINGLE_SELECT'
-          ? [optionId]
-          : currentQuizData.studentAnswer?.includes(optionId)
-            ? currentQuizData.studentAnswer.filter((id: number) => id !== optionId)
-            : [...(currentQuizData.studentAnswer || []), optionId]
+        studentAnswer:
+          currentQuizData.quizType === 'SINGLE_SELECT'
+            ? [optionId]
+            : currentQuizData.studentAnswer?.includes(optionId)
+              ? currentQuizData.studentAnswer.filter((id: number) => id !== optionId)
+              : [...(currentQuizData.studentAnswer || []), optionId],
       };
 
-      setQuizCache(prev => ({
+      setQuizCache((prev) => ({
         ...prev,
-        [currentQuizId]: updatedData
+        [currentQuizId]: updatedData,
       }));
       setCurrentQuizData(updatedData);
 
@@ -150,10 +155,9 @@ export const PracticeZone: FC = () => {
         assignmentId,
         quizId: currentQuizId,
         body: {
-          student_answer: updatedData.studentAnswer
-        }
+          student_answer: updatedData.studentAnswer,
+        },
       }).unwrap();
-
     } catch (error) {
       console.error('Failed to submit answer:', error);
       setErrorMessage('Failed to submit answer. Please try again.');
@@ -163,9 +167,9 @@ export const PracticeZone: FC = () => {
   const handleSubmitAssignment = async () => {
     if (!assignmentId) return;
 
-    const totalAnswered = Object.values(quizCache).filter(quiz => quiz.studentAnswer?.length > 0).length;
+    const totalAnswered = Object.values(quizCache).filter((quiz) => quiz.studentAnswer?.length > 0).length;
     const totalQuizzes = assignmentData?.totalQuizzes || 0;
-    
+
     if (totalAnswered < totalQuizzes) {
       setErrorMessage(`Please check if all ${totalQuizzes} questions have been answered before submitting.`);
       return;
@@ -175,7 +179,7 @@ export const PracticeZone: FC = () => {
       await submitAssignment({ assignmentId }).unwrap();
       // Navigate back to assignment page with state
       navigate(`/assignment/${lessonId}`, {
-        state: { fromPractice: true }
+        state: { fromPractice: true },
       });
     } catch (error) {
       console.error('Failed to submit assignment:', error);
@@ -201,7 +205,7 @@ export const PracticeZone: FC = () => {
       {errorMessage && (
         <ErrorToast>
           <ErrorIconContainer>
-            <img src={warningIcon} alt="Warning" width={24} height={24} />
+            <img src={warningIcon} alt='Warning' width={24} height={24} />
             <ErrorMessage>{errorMessage}</ErrorMessage>
           </ErrorIconContainer>
           <CloseButton onClick={() => setErrorMessage(null)} />
@@ -242,10 +246,7 @@ export const PracticeZone: FC = () => {
         </QuizSection>
 
         <ChatSection>
-          <AIChat 
-            assignmentId={assignmentId || ''} 
-            quizId={currentQuizId} 
-          />
+          <AIChat assignmentId={assignmentId || ''} quizId={currentQuizId} />
         </ChatSection>
       </ContentWrapper>
 

@@ -23,4 +23,4 @@ export interface QuizProps {
   onAnswerSelect: (optionId: number) => void;
   onPrevious: () => void;
   onNext: () => void;
-} 
+}

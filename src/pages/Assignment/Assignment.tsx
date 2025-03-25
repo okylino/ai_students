@@ -131,7 +131,7 @@ export const Assignment: FC = () => {
   // 修改 handleOptionClick 函数，添加调试信息但不改变原有逻辑
   const handleOptionClick = (quizId: string, optionId: number, quizType: string) => {
     console.log('Option clicked:', { quizId, optionId, quizType });
-    
+
     setQuizAnswers((prev) => {
       const newAnswers = { ...prev };
       const currentAnswers = prev[quizId] || [];
@@ -171,9 +171,9 @@ export const Assignment: FC = () => {
   };
 
   const toggleExplanation = (quizId: string) => {
-    setShowExplanations(prev => ({
+    setShowExplanations((prev) => ({
       ...prev,
-      [quizId]: !prev[quizId]
+      [quizId]: !prev[quizId],
     }));
   };
 
@@ -183,9 +183,7 @@ export const Assignment: FC = () => {
         <Navigation>
           <Link to='/classes'>{t('navigation.myClass')}</Link>
           <Separator>/</Separator>
-          <span>
-            {t('navigation.assignment')}
-          </span>
+          <span>{t('navigation.assignment')}</span>
         </Navigation>
 
         <ContentWrapper>
@@ -284,21 +282,23 @@ export const Assignment: FC = () => {
                                   const isSelected = quiz.studentAnswer?.includes(option.optionId);
                                   const isCorrectAnswer = option.isAiAnswer;
                                   const isCorrectlySelected = isSelected && isCorrectAnswer;
-                                  
+
                                   return (
                                     <div
                                       key={`option-${quizId}-${option.optionId}`}
                                       className={`option ${
-                                        isSelected 
-                                          ? isCorrectlySelected 
+                                        isSelected
+                                          ? isCorrectlySelected
                                             ? 'selected correct'
                                             : 'selected incorrect'
-                                          : isCorrectAnswer 
+                                          : isCorrectAnswer
                                             ? 'correct-answer'
                                             : ''
                                       }`}
                                     >
-                                      <span className='option-label'>{String.fromCharCode(65 + option.optionId - 1)}. </span>
+                                      <span className='option-label'>
+                                        {String.fromCharCode(65 + option.optionId - 1)}.{' '}
+                                      </span>
                                       <span className='option-content'>
                                         <strong>{option.content}</strong>
                                       </span>
@@ -306,10 +306,7 @@ export const Assignment: FC = () => {
                                   );
                                 })}
                               </div>
-                              <button 
-                                className='show-explanation'
-                                onClick={() => toggleExplanation(quizId)}
-                              >
+                              <button className='show-explanation' onClick={() => toggleExplanation(quizId)}>
                                 {showExplanations[quizId] ? t('hideExplanation') : t('showExplanation')}
                               </button>
                               {showExplanations[quizId] && (
@@ -317,7 +314,10 @@ export const Assignment: FC = () => {
                                   {quiz.optionList.map((option) => {
                                     const optionLabel = String.fromCharCode(65 + option.optionId - 1);
                                     return (
-                                      <div key={`explanation-${quizId}-${option.optionId}`} className='explanation-item'>
+                                      <div
+                                        key={`explanation-${quizId}-${option.optionId}`}
+                                        className='explanation-item'
+                                      >
                                         <span className='explanation-label'>({optionLabel})</span>
                                         <span className='explanation-content'>{option.reason}</span>
                                       </div>
@@ -344,7 +344,7 @@ export const Assignment: FC = () => {
                                 {quiz.optionList.map((option) => {
                                   const optionLabel = String.fromCharCode(65 + option.optionId - 1);
                                   const isSelected = currentAnswers.includes(option.optionId);
-                                  
+
                                   return (
                                     <div
                                       key={`option-${quizId}-${option.optionId}`}
@@ -393,18 +393,11 @@ export const Assignment: FC = () => {
       </AssignmentWrapper>
 
       {showAIChat && activeQuizId && currentAssignment && (
-        <AIChat
-          assignmentId={currentAssignment.id.toString()}
-          quizId={activeQuizId}
-          onClose={handleCloseAIChat}
-        />
+        <AIChat assignmentId={currentAssignment.id.toString()} quizId={activeQuizId} onClose={handleCloseAIChat} />
       )}
 
       {showFeedback && currentAssignment && (
-        <AssignmentFeedback
-          assignmentId={currentAssignment.id.toString()}
-          onClose={() => setShowFeedback(false)}
-        />
+        <AssignmentFeedback assignmentId={currentAssignment.id.toString()} onClose={() => setShowFeedback(false)} />
       )}
     </>
   );
