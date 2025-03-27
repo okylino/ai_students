@@ -335,7 +335,12 @@ export const PracticeZone: FC = () => {
         {/* Only render AI Chat when explicitly allowed */}
         {showAIChat && (
           <ChatSection>
-            <AIChat assignmentId={assignmentId || ''} quizId={currentQuizId} />
+            <div className="ai-chat-container">
+              <AIChat 
+                assignmentId={assignmentId || ''} 
+                quizId={currentQuizId} 
+              />
+            </div>
           </ChatSection>
         )}
       </ContentWrapper>

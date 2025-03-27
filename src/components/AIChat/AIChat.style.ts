@@ -1,5 +1,11 @@
 import styled, { keyframes } from 'styled-components';
 
+// Add breakpoints for consistent responsive behavior
+const breakpoints = {
+  mobile: '480px',
+  tablet: '768px'
+};
+
 export const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -8,6 +14,17 @@ export const ChatContainer = styled.div`
   border-radius: var(--vsx-radius-400);
   justify-content: space-between;
   background-color: #f8f9fa;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    height: 450px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100%;
+    height: 400px;
+    border-radius: 8px;
+  }
 `;
 
 export const Header = styled.div`
@@ -22,10 +39,25 @@ export const Header = styled.div`
   justify-content: center;
   margin: 0 auto;
   margin-top: 12px;
+
   div {
     margin: 0;
     color: #2b3084;
     font-size: 16px;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 95%;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 90%;
+    height: 32px;
+    padding: 6px 12px;
+
+    div {
+      font-size: 14px;
+    }
   }
 `;
 
@@ -40,6 +72,16 @@ export const MessagesContainer = styled.div`
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    height: calc(450px - 150px);
+    padding: 0.75rem;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    height: calc(400px - 130px);
+    padding: 0.5rem;
   }
 `;
 
@@ -57,6 +99,11 @@ export const Message = styled.div<{ isAI: boolean }>`
     flex-direction: column;
     align-items: flex-end;
   `}
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding-left: ${(props) => (props.isAI ? '36px' : '0')};
+    margin-bottom: 0.75rem;
+  }
 `;
 
 export const MessageBox = styled.div<{ isAI: boolean; isGenerating?: boolean }>`
@@ -78,6 +125,19 @@ export const MessageBox = styled.div<{ isAI: boolean; isGenerating?: boolean }>`
       : `
     border-radius: 12px;
   `}
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: ${(props) => (props.isGenerating ? '66px' : 'calc(100% - 20px)')};
+    max-width: 400px;
+    padding: 12px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: ${(props) => (props.isGenerating ? '60px' : 'calc(100% - 10px)')};
+    max-width: 300px;
+    min-height: ${(props) => (props.isGenerating ? '32px' : props.isAI ? '60px' : '40px')};
+    padding: 10px;
+  }
 `;
 
 export const AIAvatar = styled.img`
@@ -88,6 +148,11 @@ export const AIAvatar = styled.img`
   left: 0;
   top: 0;
   margin-right: 16px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 28px;
+    height: 28px;
+  }
 `;
 
 const loadingDotAnimation = keyframes`
@@ -125,6 +190,11 @@ export const MessageContent = styled.div<{ isAI: boolean }>`
   font-size: 16px;
   line-height: 160%;
   color: ${(props) => (props.isAI ? '#000000' : '#ffffff')};
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 14px;
+    line-height: 150%;
+  }
 `;
 
 export const Timestamp = styled.span`
@@ -139,6 +209,17 @@ export const BottomSection = styled.div`
   gap: var(--vsx-space-300);
   display: flex;
   flex-direction: column;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    height: 150px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100%;
+    height: 130px;
+    gap: 4px;
+  }
 `;
 
 export const SuggestionsContainer = styled.div<{ isLoading: boolean }>`
@@ -154,6 +235,17 @@ export const SuggestionsContainer = styled.div<{ isLoading: boolean }>`
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 0.75rem;
+    height: 80px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 0.5rem;
+    height: 60px;
+    gap: 0.35rem;
   }
 `;
 
@@ -179,6 +271,24 @@ export const SuggestionChip = styled.button`
   &:hover {
     background-color: #e9ecef;
   }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    height: 60px;
+    min-width: 160px;
+    max-width: 250px;
+    padding: 10px 14px;
+    border-radius: 12px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    height: 50px;
+    min-width: 120px;
+    max-width: 180px;
+    padding: 8px 10px;
+    font-size: 12px;
+    line-height: 18px;
+    border-radius: 10px;
+  }
 `;
 
 export const InputContainer = styled.div`
@@ -190,6 +300,19 @@ export const InputContainer = styled.div`
   border-top: 2px solid #dee2e6;
   display: flex;
   align-items: center;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    height: 70px;
+    padding: 12px 16px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100%;
+    height: 60px;
+    padding: 8px 12px;
+    gap: 6px;
+  }
 `;
 
 export const MessageInput = styled.input`
@@ -202,6 +325,19 @@ export const MessageInput = styled.input`
 
   &::placeholder {
     color: #adb5bd;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: calc(100% - 48px);
+    height: 42px;
+    font-size: 14px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: calc(100% - 42px);
+    height: 36px;
+    padding: 0.5rem;
+    font-size: 14px;
   }
 `;
 
@@ -248,6 +384,38 @@ export const ScrollTopButton = styled.button<{ isActive?: boolean; isGenerating?
     }};
     opacity: ${props => props.disabled ? 0.5 : 1};
   }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 42px;
+    height: 42px;
+
+    img {
+      width: ${(props) => {
+        if (props.isGenerating) return '42px';
+        return '18px';
+      }};
+      height: ${(props) => {
+        if (props.isGenerating) return '42px';
+        return '18px';
+      }};
+    }
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 36px;
+    height: 36px;
+
+    img {
+      width: ${(props) => {
+        if (props.isGenerating) return '36px';
+        return '16px';
+      }};
+      height: ${(props) => {
+        if (props.isGenerating) return '36px';
+        return '16px';
+      }};
+    }
+  }
 `;
 
 export const ErrorIconContainer = styled.div`
@@ -286,6 +454,13 @@ export const ErrorToast = styled.div`
       transform: translateX(-50%) translateY(0);
     }
   }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 90%;
+    height: auto;
+    min-height: 48px;
+    padding: 8px 12px;
+  }
 `;
 
 export const ErrorMessage = styled.span`
@@ -304,7 +479,7 @@ export const CloseButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   &::before,
   &::after {
     content: '';
@@ -313,11 +488,11 @@ export const CloseButton = styled.button`
     height: 2px;
     background-color: #F02B2B;
   }
-  
+
   &::before {
     transform: rotate(45deg);
   }
-  
+
   &::after {
     transform: rotate(-45deg);
   }

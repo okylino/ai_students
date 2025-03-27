@@ -1,9 +1,23 @@
 import styled from 'styled-components';
 
+// Add breakpoints for consistent responsive behavior
+const breakpoints = {
+  mobile: '480px',
+  tablet: '768px'
+};
+
 export const PracticeZoneWrapper = styled.div`
   padding: 24px;
   min-height: 100vh;
   background: transparent;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 16px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 12px 8px;
+  }
 `;
 
 export const TopBar = styled.div`
@@ -11,17 +25,32 @@ export const TopBar = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-bottom: 8px;
+  }
 `;
 
 export const Navigation = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: 1;
+  min-width: 0; /* This allows flex items to shrink below their minimum content size */
+  overflow: hidden;
 
   a {
     color: #666;
     text-decoration: none;
     font-size: 14px;
+    white-space: nowrap;
 
     &:hover {
       color: #333;
@@ -31,6 +60,18 @@ export const Navigation = styled.div`
   span {
     color: #666;
     font-size: 14px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 12px;
+    gap: 4px;
+
+    a, span {
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 `;
 
@@ -49,8 +90,27 @@ export const SubmitButton = styled.button`
   cursor: pointer;
   height: 48px;
   width: 180px;
+  flex-shrink: 0; /* Prevent button from shrinking */
+  margin-left: 16px;
+
   &:hover {
     background: #2e3bb1;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100px;
+    height: 40px;
+    font-size: 14px;
+    padding: 8px 16px;
+    margin-left: 12px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 80px;
+    height: 36px;
+    font-size: 14px;
+    padding: 6px 12px;
+    margin-left: 8px;
   }
 `;
 
@@ -61,6 +121,11 @@ export const HintWrapper = styled.div`
   padding: 12px 16px;
   margin-bottom: 16px;
   justify-content: center;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 8px;
+    margin-bottom: 12px;
+  }
 `;
 
 export const HintIcon = styled.img`
@@ -76,6 +141,11 @@ export const HintText = styled.p`
   font-size: 14px;
   line-height: 120%;
   letter-spacing: -0.006em;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 12px;
+    line-height: 1.2;
+  }
 `;
 
 export const ContentWrapper = styled.div`
@@ -90,6 +160,17 @@ export const QuizSection = styled.div`
   padding: 24px;
   width: 828px;
   margin: 0 auto;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    padding: 16px;
+    max-width: 600px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 0;
+    width: 100%;
+  }
 `;
 
 export const ChatSection = styled.div`
@@ -98,6 +179,52 @@ export const ChatSection = styled.div`
   padding: 24px;
   width: 828px;
   margin: 0 auto;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    padding: 16px;
+    max-width: 600px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 8px 0;
+    width: 100%;
+  }
+
+  /* Styles for AIChat container */
+  .ai-chat-container {
+    border-radius: 8px;
+
+    @media (max-width: ${breakpoints.mobile}) {
+      border-radius: 4px;
+    }
+  }
+
+  /* Styles for chat messages */
+  .chat-message {
+    padding: 12px;
+
+    @media (max-width: ${breakpoints.mobile}) {
+      padding: 8px;
+      font-size: 14px;
+    }
+  }
+
+  /* Styles for chat input */
+  .chat-input {
+    margin: 8px;
+
+    @media (max-width: ${breakpoints.mobile}) {
+      margin: 4px;
+    }
+
+    input, textarea {
+      @media (max-width: ${breakpoints.mobile}) {
+        font-size: 14px;
+        padding: 8px;
+      }
+    }
+  }
 `;
 
 export const ErrorToast = styled.div`
@@ -124,6 +251,13 @@ export const ErrorToast = styled.div`
     to {
       transform: translateX(-50%) translateY(0);
     }
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 90%;
+    height: auto;
+    min-height: 48px;
+    padding: 8px 12px;
   }
 `;
 

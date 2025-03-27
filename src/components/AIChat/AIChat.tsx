@@ -265,7 +265,7 @@ export const AIChat: FC<AIChatProps> = ({ className, assignmentId, quizId, onClo
   };
 
   return (
-    <ChatContainer className={className}>
+    <ChatContainer className={`${className} ai-chat-responsive`}>
       {error && (
         <ErrorToast>
           <ErrorIconContainer>

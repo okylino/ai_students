@@ -1,5 +1,11 @@
 import styled from 'styled-components';
 
+// Add breakpoints for consistent responsive behavior
+const breakpoints = {
+  mobile: '480px',
+  tablet: '768px'
+};
+
 export const QuizWrapper = styled.div`
   background: #ffffff;
   border-radius: 8px;
@@ -8,6 +14,16 @@ export const QuizWrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+  
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 16px;
+    min-height: 180px;
+  }
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 16px;
+    min-height: 160px;
+  }
 `;
 
 export const QuizContent = styled.div`
@@ -17,6 +33,15 @@ export const QuizContent = styled.div`
 export const QuizContainer = styled.div`
   width: 828px;
   margin: 0 auto;
+  
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100%;
+  }
 `;
 
 export const QuizProgress = styled.div`
@@ -25,11 +50,23 @@ export const QuizProgress = styled.div`
   border-radius: 8px;
   text-align: center;
   margin-bottom: 24px;
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 6px 12px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
 `;
 
 export const QuizQuestion = styled.h2`
   font-size: 16px;
   margin-bottom: 24px;
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 15px;
+    line-height: 1.4;
+    margin-bottom: 16px;
+  }
 `;
 
 export const NavigationButtons = styled.div`
@@ -38,6 +75,11 @@ export const NavigationButtons = styled.div`
   gap: 24px;
   margin-top: auto;
   padding-top: 27px;
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    gap: 16px;
+    padding-top: 16px;
+  }
 `;
 
 interface NavButtonProps {
@@ -104,6 +146,18 @@ export const OptionsGrid = styled.div`
   flex-wrap: wrap;
   gap: 16px;
   margin-top: 16px;
+  
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    max-width: 600px;
+    gap: 12px;
+  }
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
 `;
 
 export const OptionContainer = styled.div`
@@ -111,6 +165,14 @@ export const OptionContainer = styled.div`
   gap: 8px;
   align-items: center;
   width: 406px;
+  
+  @media (max-width: ${breakpoints.tablet}) {
+    width: calc(50% - 6px);
+  }
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100%;
+  }
 `;
 
 export const OptionLabel = styled.div`
@@ -125,6 +187,12 @@ export const OptionLabel = styled.div`
   color: #000000;
   font-weight: 500;
   flex-shrink: 0;
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+  }
 `;
 
 export const OptionButton = styled.button<{ selected?: boolean }>`
@@ -141,5 +209,18 @@ export const OptionButton = styled.button<{ selected?: boolean }>`
 
   &:hover {
     background: ${(props) => (props.selected ? '#2B3084' : '#F5F5FF')};
+  }
+  
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px;
+  }
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 100%;
+    min-height: 44px;
+    padding: 12px 10px;
+    font-size: 14px;
   }
 `;
