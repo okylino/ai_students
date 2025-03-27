@@ -63,13 +63,6 @@ export const Assignment: FC = () => {
     }
   }, [assignments, currentAssignment]);
 
-  // 确保使用中文，但要等待 i18n 初始化完成
-  useEffect(() => {
-    if (i18n.isInitialized && i18n.language !== 'zh') {
-      i18n.changeLanguage('zh');
-    }
-  }, [i18n.isInitialized]);
-
   // 添加更详细的调试信息
   console.log('Current language details:', {
     language: i18next.language,
