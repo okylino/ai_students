@@ -41,6 +41,7 @@ export const Assignment: FC = () => {
   const [showExplanations, setShowExplanations] = useState<Record<string, boolean>>({});
   const [updateAssignmentStatus] = useUpdateAssignmentStatusMutation();
   const [showFeedback, setShowFeedback] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Add debug logging for the lessonId parameter
   console.log('URL Params - lessonId:', lessonId);
@@ -177,6 +178,14 @@ export const Assignment: FC = () => {
           <Link to='/classes'>{t('navigation.myClass')}</Link>
           <Separator>/</Separator>
           <span>{t('navigation.assignment')}</span>
+          
+          <button 
+            className="mobile-menu-button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
         </Navigation>
 
         <ContentWrapper>

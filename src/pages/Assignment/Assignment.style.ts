@@ -1,10 +1,19 @@
 import styled from 'styled-components';
 
+const breakpoints = {
+  mobile: '480px',
+  tablet: '768px'
+};
+
 export const AssignmentWrapper = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   background: #F5F5F5;
+  
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 0;
+  }
 `;
 
 export const Navigation = styled.div`
@@ -12,16 +21,23 @@ export const Navigation = styled.div`
   align-items: center;
   gap: 8px;
   margin-bottom: 24px;
-  padding: 24px 0;
-  padding-left: 24px;
-
+  padding: 16px 24px;
+  background: white;
+  
   a {
     color: #668;
     text-decoration: none;
+    font-size: 14px;
 
     &:hover {
       text-decoration: underline;
     }
+  }
+  
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 12px 16px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #eaeaea;
   }
 `;
 
@@ -32,16 +48,39 @@ export const Separator = styled.span`
 export const Title = styled.h1`
   font-family: 'Inter', sans-serif;
   font-weight: 600;
-  font-size: 24px;
-  margin-bottom: 24px;
+  font-size: 22px;
+  margin: 24px 0 20px;
   text-align: center;
+  
+  @media (max-width: ${breakpoints.tablet}) {
+    font-size: 18px;
+    margin: 16px 0;
+    text-align: center;
+  }
 `;
 
 export const TabList = styled.div`
   display: flex;
-  gap: 16px;
+  border-bottom: 1px solid #e0e0e0;
   margin-bottom: 24px;
+  overflow-x: auto;
+  padding: 0 16px;
   justify-content: center;
+  
+  @media (max-width: ${breakpoints.tablet}) {
+    justify-content: center;
+    padding: 8px 16px;
+    white-space: nowrap;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 16px;
+    width: 100%;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 `;
 
 interface TabProps {
@@ -58,6 +97,7 @@ export const Tab = styled.button<TabProps>`
   color: ${(props) => (props.$active ? '#1890FF' : '#666')};
   transition: all 0.3s;
   position: relative;
+  white-space: nowrap;
 
   &:hover {
     color: #1890ff;
@@ -77,6 +117,11 @@ export const Tab = styled.button<TabProps>`
       border-radius: 50%;
     }
   `}
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
 `;
 
 export const NoAssignmentWrapper = styled.div`
@@ -118,19 +163,16 @@ export const ExtendedMaterialsSection = styled.section`
 `;
 
 export const ContentWrapper = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: calc(100vh - 180px);
-  overflow-y: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
+  background: #F5F5F5;
+  padding: 0 16px;
+  
+  @media (max-width: ${breakpoints.tablet}) {
+    padding: 0 16px;
+  }
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 0 8px;
+    background: #f5f5f5;
   }
 `;
 
@@ -139,16 +181,18 @@ export const ContentSection = styled.div`
   padding: 24px;
   margin-bottom: 16px;
   border-radius: 8px;
-  width: 828px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 828px;
+  margin: 0 auto 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
   .section-header {
     display: flex;
     align-items: center;
     gap: 16px;
     margin-bottom: 16px;
-    margin-top: 50px;
-    padding-left: 16px;
+    margin-top: 30px;
+    padding-left: 0;
 
     img {
       width: 24px;
@@ -164,6 +208,10 @@ export const ContentSection = styled.div`
       color: #212121;
       margin: 0;
     }
+    
+    &:first-child {
+      margin-top: 0;
+    }
   }
 
   .description {
@@ -172,7 +220,48 @@ export const ContentSection = styled.div`
     line-height: 22.4px;
     color: #444444;
     margin-bottom: 24px;
-    padding-left: 56px;
+    padding-left: 34px;
+  }
+  
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    padding: 16px;
+    margin: 0 auto 16px;
+    
+    .section-header {
+      margin-top: 30px;
+      padding-left: 0;
+      
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    padding: 16px 12px;
+    margin: 0 auto 16px;
+    border-radius: 8px;
+    max-width: 100%;
+    
+    .section-header {
+      gap: 10px;
+      margin-top: 24px;
+      
+      h2 {
+        font-size: 16px;
+        line-height: 19px;
+      }
+      
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+    
+    .description {
+      padding-left: 24px;
+      margin-bottom: 16px;
+    }
   }
 `;
 
@@ -191,42 +280,66 @@ export const MaterialsGrid = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   padding-left: 56px;
+  
+  @media (max-width: ${breakpoints.tablet}) {
+    padding-left: 32px;
+    gap: 12px;
+  }
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    grid-template-columns: 1fr;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
 `;
 
 export const MaterialCard = styled.div`
   display: flex;
-  width: 342px;
-  height: 104px;
-  background: #f6f6f6;
+  background: #f9f9f9;
   border-radius: 8px;
   padding: 16px;
   gap: 16px;
-
+  
   img {
     width: 128px;
     height: 72px;
     object-fit: cover;
     border-radius: 4px;
   }
-
-  .material-content {
-    flex: 1;
-
-    h3 {
-      font-family: sans-serif;
-      font-weight: 500;
-      font-size: 16px;
-      line-height: 19.2px;
-      color: #212121;
-      margin: 0 0 8px 0;
+  
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+    
+    img {
+      width: 96px;
+      height: 72px;
     }
-
-    p {
-      font-family: sans-serif;
-      font-size: 14px;
-      line-height: 22.4px;
-      color: #444444;
-      margin: 0;
+  }
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    height: auto;
+    padding: 12px;
+    
+    img {
+      width: 80px;
+      height: 60px;
+    }
+    
+    .material-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      
+      h3 {
+        font-size: 15px;
+        line-height: 18px;
+        margin-bottom: 4px;
+      }
+      
+      p {
+        font-size: 13px;
+        line-height: 16px;
+      }
     }
   }
 `;
@@ -297,6 +410,14 @@ export const PracticeSection = styled.div`
     margin-bottom: 16px;
     background: #FFFFFF;
     text-align: left;
+    
+    @media (max-width: ${breakpoints.tablet}) {
+      width: 100%;
+    }
+    
+    @media (max-width: ${breakpoints.mobile}) {
+      padding: 12px;
+    }
   }
 
   .quiz-header {
@@ -338,6 +459,13 @@ export const PracticeSection = styled.div`
       border-radius: 4px;
       transition: all 0.3s ease;
       width: 100%;
+      
+      @media (max-width: ${breakpoints.mobile}) {
+        padding: 8px 12px;
+        align-items: flex-start;
+        height: auto;
+        min-height: 26px;
+      }
 
       &.selected.correct,
       &.selected.incorrect,
@@ -440,7 +568,7 @@ export const PracticeSection = styled.div`
       margin-bottom: 8px;
       display: flex;
       align-items: flex-start;
-      
+
       .explanation-label {
         font-weight: 500;
         font-size: 14px;
@@ -456,6 +584,21 @@ export const PracticeSection = styled.div`
         line-height: 120%;
         color: #666;
         flex: 1;
+      }
+    }
+  }
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    .practice-content {
+      img {
+        width: 200px;
+        height: auto;
+      }
+    }
+    
+    .quiz-header {
+      .quiz-question {
+        font-size: 15px;
       }
     }
   }
@@ -486,5 +629,16 @@ export const PracticeButton = styled.button`
 
   &:hover {
     opacity: 0.9;
+  }
+  
+  @media (max-width: ${breakpoints.mobile}) {
+    width: 160px;
+    height: 44px;
+    font-size: 15px;
+    
+    img {
+      width: 28px;
+      height: 28px;
+    }
   }
 `;
