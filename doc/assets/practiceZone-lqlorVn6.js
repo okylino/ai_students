@@ -1,0 +1,2 @@
+(function(){try{var e=typeof window<"u"?window:typeof global<"u"?global:typeof globalThis<"u"?globalThis:typeof self<"u"?self:{},n=new e.Error().stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="cbf4c36b-a0b4-4bf0-acb5-ab61314dd9ea",e._sentryDebugIdIdentifier="sentry-dbid-cbf4c36b-a0b4-4bf0-acb5-ab61314dd9ea")}catch{}})();const a={myClass:"My Class",assignment:"Assignment",practiceZone:"Practice Zone"},t="Loading...",s={navigation:a,loading:t};export{s as default,t as loading,a as navigation};
+//# sourceMappingURL=practiceZone-lqlorVn6.js.map

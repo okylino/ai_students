@@ -1,0 +1,2 @@
+(function(){try{var e=typeof window<"u"?window:typeof global<"u"?global:typeof globalThis<"u"?globalThis:typeof self<"u"?self:{},t=new e.Error().stack;t&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[t]="1ffdaa3d-f518-46e5-a741-22b318e1982d",e._sentryDebugIdIdentifier="sentry-dbid-1ffdaa3d-f518-46e5-a741-22b318e1982d")}catch{}})();const n="Quiz {{current}} of {{total}}",s="Submit Answer",d="Next Question",f={progress:n,submit:s,next:d};export{f as default,d as next,n as progress,s as submit};
+//# sourceMappingURL=quiz-VUZjEtbt.js.map
