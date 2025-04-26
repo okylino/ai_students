@@ -14,6 +14,9 @@ export default defineConfig(({ mode }) => {
   const buildTime = new Date().getTime();
   const env = loadEnv(mode, process.cwd(), '');
   return {
+    server: {
+      allowedHosts: ['testmanger.natapp1.cc'],
+    },
     build: {
       outDir: 'build',
       target: 'esnext',
